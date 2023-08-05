@@ -24,27 +24,30 @@
                   <p class="mb-0">Enter your email and password to sign in</p>
                 </div>
                 <div class="card-body">
-                  <form role="form" class="text-start">
+                  <form @submit.prevent="login" role="form" class="text-start">
                     <label>Email</label>
                     <soft-input
                       id="email"
                       type="email"
                       placeholder="Email"
                       name="email"
+                      v-model="email"
                     />
+                    <span class="text-danger text-small">{{ error }}</span>
+                    <br />
                     <label>Password</label>
                     <soft-input
                       id="password"
                       type="password"
                       placeholder="Password"
                       name="password"
+                      v-model="password"
                     />
                     <soft-switch id="rememberMe" name="rememberMe" checked>
                       Remember me
                     </soft-switch>
                     <div class="text-center">
                       <soft-button
-                        @click="login"
                         class="my-4 mb-2"
                         variant="gradient"
                         color="success"
@@ -105,6 +108,13 @@ export default {
     SoftSwitch,
     SoftButton,
   },
+  data() {
+    return {
+      email: this.$attrs.value || '',
+      password: '',
+      error: ''
+    };
+  },
   created() {
     this.toggleEveryDisplay();
     this.toggleHideConfig();
@@ -117,16 +127,15 @@ export default {
   },
   methods: {
     ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
-  },
-  login() {
-      // Implement your login logic here
-      // For demonstration purposes, we'll use a simple flag to simulate a successful login.
-      const isLoggedIn = true;
-      if (isLoggedIn) {
-        this.$router.push('/Dashboard');
-      } else {
-        alert('Login failed. Please try again.');
-      }
+    login() {
+        const auth = this.$store.dispatch('login', { email: this.email, password: this.password });
+        if (auth){
+          this.$router.push('/dashboard');
+        } else {
+          this.error = 'Inavlid email or password'
+        }
+        //this.$router.push('/');
+    },
   },
 };
 </script>

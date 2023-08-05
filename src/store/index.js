@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import bootstrap from "bootstrap/dist/js/bootstrap.min.js";
+import axios from "axios";
 
 export default createStore({
   state: {
@@ -8,7 +9,9 @@ export default createStore({
     showConfig: false,
     isTransparent: "",
     isRTL: false,
+    isAuthenticated: false,
     color: "",
+    user: null,
     isNavFixed: false,
     isAbsolute: false,
     showNavs: true,
@@ -58,6 +61,12 @@ export default createStore({
     toggleHideConfig(state) {
       state.hideConfigButton = !state.hideConfigButton;
     },
+    setIsAuthenticated(state, value) {
+      state.isAuthenticated = value;
+    },
+    setUser(state, user) {
+      state.user = user;
+    },
   },
   actions: {
     toggleSidebarColor({ commit }, payload) {
@@ -65,6 +74,37 @@ export default createStore({
     },
     setCardBackground({ commit }, payload) {
       commit("cardBackground", payload);
+    },
+    async login({ commit }, {email, password}) {
+      try {
+        const data = await axios.post('https://psb.sitebix.com/api/auth/local', {
+            "identifier": email,
+            "password": password
+        });
+        const isAuthenticated = true;
+        commit('setIsAuthenticated', isAuthenticated);
+        commit('setUser', data);
+        console.log('SUCCESS!!');
+        return true;
+      } catch (error) {
+        console.log('FAILED!!!');
+        const isAuthenticated = false;
+        commit('setIsAuthenticated', isAuthenticated);
+        return false;
+      }
+
+        
+
+
+      // Simulate a login process here (e.g., validating credentials)
+      // In a real-world app, you would communicate with your backend server for authentication
+
+    },
+    logout({ commit }) {
+      // Simulate a logout process here
+      const isAuthenticated = false;
+      commit('setIsAuthenticated', isAuthenticated);
+      commit('setUser', null);
     },
   },
   getters: {},

@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import { createApp } from "vue";
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import App from "./App.vue";
 import store from "./store";
 import router from "./router";
@@ -26,3 +27,4 @@ appInstance.use(store);
 appInstance.use(router);
 appInstance.use(SoftUIDashboard);
 appInstance.mount("#app");
+
