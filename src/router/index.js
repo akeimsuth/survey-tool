@@ -8,7 +8,11 @@ import Surveys from "@/views/Surveys.vue";
 import Templates from "@/views/Templates.vue";
 import Profile from "@/views/Profile.vue";
 import SignIn from "@/views/SignIn.vue";
-
+import MySurveys from "@/views/MySurveys.vue";
+import TemplateScreen from "@/views/TemplateScreen.vue";
+import SurveyScreen from "@/views/SurveyScreen.vue";
+import AddQuestionSurvey from "@/views/AddQuestionSurvey.vue";
+import AddQuestionTemplate from "@/views/AddQuestionTemplate.vue";
 
 const routes = [
   {
@@ -42,6 +46,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: "/my-surveys",
+    name: "MySurveys",
+    component: MySurveys,
+    meta: { requiresAuth: true }
+  },
+  {
     path: "/templates",
     name: "Templates",
     component: Templates,
@@ -57,6 +67,26 @@ const routes = [
     path: "/sign-in",
     name: "Sign In",
     component: SignIn,
+  },
+  {
+    path: "/survey-screen/:id",
+    name: "SurveyScreen",
+    component: SurveyScreen,
+  },
+  {
+    path: "/template-screen/:id",
+    name: "TemplateScreen",
+    component: TemplateScreen,
+  },
+  {
+    path: "/questions/:id",
+    name: "Questions",
+    component: AddQuestionSurvey,
+  },
+  {
+    path: "/template-questions/:id",
+    name: "TemplateQuestions",
+    component: AddQuestionTemplate,
   }
 ];
 

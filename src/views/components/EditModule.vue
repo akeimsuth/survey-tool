@@ -21,7 +21,7 @@
                   <input type="text" name="fullname" class="form-control" placeholder="Full Name" aria-label="fullname" v-model="name" required>
               </div>
               <label>Description</label>
-              <QuillEditor theme="snow" content-type="html" v-model:content="description" />
+              <QuillEditor theme="snow" v-model="description"/>
               <div class="modal-footer">
                   <button @click="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   <button type="submit" class="btn btn-primary">Save changes</button>
@@ -52,10 +52,6 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
       },
       closeModal() {
         this.isModalOpen = false;
-      },
-      onEditorChange(e){
-        console.log('Editor: ',e, this.description);
-        //this.description = e.container.querySelector('.ql-blank').innerHTML;
       },
       submitForm() {
         // Handle form submission here

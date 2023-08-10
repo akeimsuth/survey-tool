@@ -24,19 +24,18 @@
               <div class="mb-3">
                   <input type="email" name="email" class="form-control" placeholder="Email" aria-label="email" v-model="email" required>
               </div>
-              <label>Role</label>
+              <!-- <label>Role</label>
               <div class="mb-3">
                   <select name="role" class="form-control form-select">
                       <option value="1">Administrator</option>
                       <option value="2">User</option>
                   </select>
-              </div>
+              </div> -->
               <label>Password</label>
               <div class="mb-3" style="display:flex;align-items: baseline;">
-                  <input v-if="type === 'text'" type="text" id="user_password" name="password" class="form-control" placeholder="Password" aria-label="password" v-model="password" required>
-                  <input v-else-if="type === 'password'" type="password" id="user_password" name="password" class="form-control" placeholder="Password" aria-label="password" v-model="password" required>
+                  <input :type="type" id="user_password" name="password" class="form-control" placeholder="Password" aria-label="password" v-model="password" required>
                   <i v-if="type === 'text'" id="icon" class="fas fa-eye mx-4" @click="showPassword"></i>
-                  <i v-else-if="type === 'password'" id="icon" class="fas fa-eye-slash" @click="showPassword"></i>
+                  <i v-else id="icon" class="fas fa-eye-slash mx-4" @click="showPassword"></i>
                   <button style="margin-left: 1rem" class="btn btn-primary" type="button" id="generate_password" @click="generateRandomPassword">Generate</button>
               </div>
               <div class="modal-footer">
@@ -50,7 +49,6 @@
   </template>
   
   <script>
-  import { ref } from 'vue';
   export default {
     data() {
       return {
@@ -61,15 +59,6 @@
         type: 'password'
       };
     },
-    setup() {
-    // Create a reactive variable to hold the selected input type
-    const selectedInputType = ref('text');
-
-    // Create a reactive variable to hold the input value
-    const inputValue = ref('');
-
-    return { selectedInputType, inputValue };
-  },
     methods: {
       showModal() {
         this.isModalOpen = true;
@@ -79,13 +68,7 @@
       },
       submitForm() {
         // Handle form submission here
-        // For demonstration, we'll just log the user input
-        console.log({
-          name: this.username,
-          email: this.email,
-          password: this.password,
-        });
-        this.closeModal();
+        this.$store.dispatch('createUser', { username: this.username, email: this.email, password: this.password});
       },
       showPassword(){
         // Create a reactive variable to hold the selected input type

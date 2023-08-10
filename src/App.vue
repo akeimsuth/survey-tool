@@ -16,22 +16,14 @@
       :class="[navClasses]"
       :textWhite="this.$store.state.isAbsolute ? 'text-white opacity-8' : ''"
       :minNav="navbarMinimize"
-      v-if="this.$store.state.showNavbar"
+      v-if="this.$store.state.isAuthenticated"
     />
     <router-view />
     <app-footer v-show="this.$store.state.showFooter" />
-    <configurator
-      :toggle="toggleConfigurator"
-      :class="[
-        this.$store.state.showConfig ? 'show' : '',
-        this.$store.state.hideConfigButton ? 'd-none' : '',
-      ]"
-    />
   </main>
 </template>
 <script>
 import Sidenav from "./examples/Sidenav";
-import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
 import { mapMutations } from "vuex";
@@ -39,7 +31,6 @@ export default {
   name: "App",
   components: {
     Sidenav,
-    Configurator,
     Navbar,
     AppFooter,
   },

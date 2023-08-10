@@ -127,10 +127,13 @@ export default {
   },
   methods: {
     ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
-    login() {
-        const auth = this.$store.dispatch('login', { email: this.email, password: this.password });
-        if (auth){
+    async login() {
+        const auth = await this.$store.dispatch('login', { email: this.email, password: this.password });
+        if (auth === 'auth_admin'){
           this.$router.push('/dashboard');
+          console.log("USER: ",this.$store.state.user);
+        } else if (auth === 'authenticated'){
+          this.$router.push('/my-surveys');
         } else {
           this.error = 'Inavlid email or password'
         }

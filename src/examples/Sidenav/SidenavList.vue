@@ -4,42 +4,49 @@
     id="sidenav-collapse-main"
   >
     <ul class="navbar-nav">
-      <li class="nav-item">
+      <li class="nav-item" v-if="auth">
         <sidenav-collapse navText="Dashboard" :to="{ name: 'Dashboard' }">
           <template #icon>
             <shop />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="!auth">
+        <sidenav-collapse navText="My Surveys" :to="{ name: 'MySurveys' }">
+          <template #icon>
+            <shop />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item" v-if="auth">
         <sidenav-collapse navText="Users" :to="{ name: 'Users' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="auth">
         <sidenav-collapse navText="Modules" :to="{ name: 'Modules' }">
           <template #icon>
             <credit-card />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="auth">
         <sidenav-collapse navText="Surveys" :to="{ name: 'Surveys' }">
           <template #icon>
             <credit-card />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="auth">
         <sidenav-collapse navText="Templates" :to="{ name: 'Templates' }">
           <template #icon>
             <shop />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="auth">
         <sidenav-collapse navText="BugReports" :to="{ name: 'BugReports' }">
           <template #icon>
             <credit-card />
@@ -90,7 +97,8 @@ import CreditCard from "../../components/Icon/CreditCard.vue";
 import CustomerSupport from "../../components/Icon/CustomerSupport.vue";
 // import Spaceship from "../../components/Icon/Spaceship.vue";
 // import Settings from "../../components/Icon/Settings.vue";
-
+import {computed} from 'vue';
+import {useStore} from "vuex";
 export default {
   name: "SidenavList",
   props: {
@@ -98,7 +106,7 @@ export default {
   },
   data() {
     return {
-      title: "Soft UI Dashboard PRO",
+      title: "Potawanami Tool",
       controls: "dashboardsExamples",
       isActive: "active",
     };
@@ -112,6 +120,18 @@ export default {
     CustomerSupport,
     // Spaceship,
     // Settings,
+  },
+  setup(){
+    const store = useStore();
+
+    let auth = computed(function () {
+      return store.getters.getUser?.data?.user?.id == 1
+    });
+
+
+    return {
+      auth
+    }
   },
   methods: {
     getRoute() {

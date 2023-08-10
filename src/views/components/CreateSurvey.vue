@@ -22,7 +22,7 @@
               </div>
               <label>Module</label>
               <div class="mb-3">
-                  <select name="module" class="form-control form-select">
+                  <select name="module" class="form-control form-select" v-model="mod">
                     <option>-- SELECT --</option>
                     <option v-for="mod in modules" :key="mod.id" :value="mod.id">
                         {{ mod.attributes.name }}
@@ -30,7 +30,7 @@
                   </select>
               </div>
               <label>Description</label>
-              <QuillEditor theme="snow" />
+              <QuillEditor theme="snow" content-type="html" v-model:content="description"/>
               <div class="modal-footer">
                   <button @click="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   <button type="submit" class="btn btn-primary">Save changes</button>
@@ -54,6 +54,7 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
         isModalOpen: false,
         name: '',
         modules: [],
+        mod: '',
         description: ''
       };
     },
@@ -71,6 +72,7 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
       submitForm() {
         // Handle form submission here
         // For demonstration, we'll just log the user input
+        this.$store.dispatch('createSurvey', { name: this.name, description: this.description, module_id: this.mod})
         console.log({
           name: this.name,
           modules: this.modules,

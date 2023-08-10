@@ -20,17 +20,8 @@
             <div class="mb-3">
                 <input type="text" name="fullname" class="form-control" placeholder="Template Name" aria-label="fullname" v-model="name" required>
             </div>
-            <label>Module</label>
-            <div class="mb-3">
-                <select name="module" class="form-control form-select">
-                  <option>-- SELECT --</option>
-                  <option v-for="mod in modules" :key="mod.id" :value="mod.id">
-                      {{ mod.attributes.name }}
-                  </option>
-                </select>
-            </div>
             <label>Description</label>
-            <QuillEditor theme="snow" />
+            <QuillEditor theme="snow" content-type="html" v-model:content="description"/>
             <div class="modal-footer">
                 <button @click="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Save changes</button>
@@ -42,7 +33,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 export default {
@@ -53,7 +43,6 @@ export default {
     return {
       isModalOpen: false,
       name: '',
-      modules: [],
       description: ''
     };
   },
@@ -62,7 +51,6 @@ export default {
   // },
   methods: {
     showModal() {
-      this.fetchModules();
       this.isModalOpen = true;
     },
     closeModal() {
@@ -71,22 +59,12 @@ export default {
     submitForm() {
       // Handle form submission here
       // For demonstration, we'll just log the user input
+      this.$store.dispatch('createTemplate', { name: this.name, description: this.description})
       console.log({
         name: this.name,
-        modules: this.modules,
         description: this.description,
       });
       this.closeModal();
-    },
-    fetchModules() {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-      axios.get('https://psb.sitebix.com/api/modules')
-        .then(response => {
-          this.modules = response.data.data;
-        })
-        .catch(error => {
-          console.error('Error fetching modules:', error);
-        });
     },
   },
 };

@@ -7,7 +7,7 @@
       <div class="row gx-4">
         <div class="col-auto my-auto">
           <div class="h-100">
-            <h5 class="mb-1">Test</h5>
+            <h5 class="mb-1">{{username}}</h5>
             <p class="mb-0 text-sm font-weight-bold">CEO / Co-Founder</p>
           </div>
         </div>
@@ -140,7 +140,7 @@
                 <label class="form-label">Name</label>
                 <div class="form-group">
                   <div class="">
-                    <input id="firstName" type="text" class="form-control form-control-default" name="" placeholder="Alec"
+                    <input id="firstName" type="text" :value="username" class="form-control form-control-default" name="" placeholder="Alec"
                       isrequired="false">
                   </div>
                 </div>
@@ -149,7 +149,7 @@
                 <label class="form-label">Email</label>
                 <div class="form-group">
                   <div class="">
-                    <input id="lastName" type="text" class="form-control form-control-default" name=""
+                    <input id="lastName" type="text" class="form-control form-control-default" :value="email"
                       placeholder="Thompson" isrequired="false">
                   </div>
                 </div>
@@ -204,6 +204,8 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
+import {computed} from 'vue';
+import {useStore} from "vuex";
 
 export default {
   name: "ProfileOverview",
@@ -230,7 +232,23 @@ export default {
       faInstagram,
     };
   },
+  setup(){
+    const store = useStore();
 
+    let username = computed(function () {
+      return store.state.user?.data?.user?.username
+    });
+
+    let email = computed(function () {
+      return store.state.user?.data?.user?.email
+    });
+
+
+    return {
+      username,
+      email
+    }
+  },
   mounted() {
     this.$store.state.isAbsolute = true;
     setNavPills();
