@@ -26,6 +26,7 @@ export default createStore({
     moduleCount: 0,
     surveyCount: 0,
     userCount: 0,
+    bugCount: 0,
     color: "",
     user: null,
     users: null,
@@ -135,6 +136,9 @@ export default createStore({
     },
     setBugs(state, bugs){
       state.bugs = bugs;
+    },
+    setBugCount(state, bugCount){
+      state.bugCount = bugCount;
     }
   },
   actions: {
@@ -151,7 +155,7 @@ export default createStore({
       dispatch('fetchTemplates');
       dispatch('getDashboardCount');
       dispatch('fetchUsers');
-      dispatch('fetchAssignedSurveys', this.state.user.id);
+      dispatch('fetchAssignedSurveys', this.state.user.data.user.id);
     },
     async login({ commit, dispatch }, { email, password}){
       try {
@@ -199,8 +203,10 @@ export default createStore({
         const survey_count = await axios.get(`https://psb.sitebix.com/api/surveys?filters[module][account][id][$eq]=${this.state.accountId}`);
         const module_count = await axios.get(`https://psb.sitebix.com/api/modules?filters[account][id][$eq]=${this.state.accountId}`);
         const user_count = await axios.get('https://psb.sitebix.com/api/users/count');
+        const bug_count = await axios.get(`https://psb.sitebix.com/api/bugs?filters[account][id][$eq]=${this.state.accountId}`);
         commit('setSurveyCount', survey_count.data.meta.pagination.total);
         commit('setModuleCount', module_count.data.meta.pagination.total);
+        commit('setBugCount', bug_count.data.meta.pagination.total);
         commit('setUserCount', user_count.data);
         console.log('Count: ', user_count);
       } catch (error) {
@@ -223,7 +229,7 @@ export default createStore({
     },
     fetchBugs({ commit }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get('https://psb.sitebix.com/api/bugs')
+      axios.get('https://psb.sitebix.com/api/bugs?populate=*')
         .then(response => {
           commit('setBugs',response.data.data);
         })
@@ -289,18 +295,17 @@ export default createStore({
       axios.get(`https://psb.sitebix.com/api/surveys/${id}?populate[questions][populate]=answers`)
         .then(response => {
           commit('setQuestions',response.data.data.attributes.questions.data);
-          return true;
+          console.log('QUESTIONS: ', response.data.data.attributes.questions.data);
         })
         .catch(error => {
           console.error('Error fetching users:', error);
-          return false;
         });
     },
     fetchTemplateQuestions({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`https://psb.sitebix.com/api/users/${id}?populate[user-questions][populate]=answers`)
         .then(response => {
-          commit('setQuestions',response.data.data.attributes.questions.data);
+          commit('setTemplateQuestions',response.data.data.attributes.questions.data);
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -500,6 +505,9 @@ export default createStore({
     getQuestions(state){
       return state.questions;
     },
+    getTemplateQuestions(state){
+      return state.question_templates;
+    },
     getBugs(state){
       return state.bugs;
     },
@@ -514,6 +522,9 @@ export default createStore({
     },
     getSurveyCount(state){
       return state.surveyCount;
+    },
+    getBugCount(state){
+      return state.bugCount;
     },
     getModuleCount(state){
       return state.moduleCount;

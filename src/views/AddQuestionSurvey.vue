@@ -22,7 +22,7 @@
               <div class="input-group">
                 <input class="form-control question-options" type="text" :value="answer.attributes.answer" placeholder="Enter your answer" required>
                 <div class="input-group-append">
-                  <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeAnswer(question, answerIndex)">Remove Answer</button>
+                  <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeApiAnswer(answer.id)">Remove Answer</button>
                 </div>
               </div>
             </div>
@@ -38,7 +38,7 @@
                 <option value="multiple">Multiple Choice</option>
               </select>
             </div>
-            <label class="label">Question {{ index + 1 }}:</label>
+            <label class="label">Question {{ index + 1 + savedQuestions.length }}:</label>
             <input class="form-control question-content" type="text" v-model="question.text" placeholder="Enter your question" required>
             
             <div v-for="(answer, answerIndex) in question.answers" :key="answerIndex" class="answer-container">
@@ -78,31 +78,24 @@ import axios from 'axios';
 import 'vue3-toastify/dist/index.css';
 export default {
   name: 'QuestionCreator',
-  async setup() {
+  setup() {
     const selectedType = ref('single');
     const questions = ref([]);
     const store = useStore();
     const route = useRoute();
     const id = route.params.id;
-    console.log("Survey id", id);
-    const qReady = await store.dispatch('fetchQuestions', { id: id});
-    console.log(0);
-    let survey;
-    let savedQuestions;
-    if(qReady) {
-      console.log("this is running");
-      survey = computed(function () {
-        console.log(1);
-        return store.getters.getSurvey
-      });
+    store.dispatch('fetchSurvey', { id: id });
+    store.dispatch('fetchQuestions', { id: id });
+    let survey = computed(function () {
+      return store.getters.getSurvey
+    });
 
-      savedQuestions = computed(function () {
-        console.log(2);
-        return store.getters.getQuestions
-      });
-    }
+    let savedQuestions = computed(function () {
+      return store.getters.getQuestions
+    });
     
-    console.log('Questions: ', JSON.parse(JSON.stringify(savedQuestions)));
+    
+    console.log('Questions: ', id);
     
     const addQuestion = () => {
       questions.value.push({ type: 'none', text: '', answers: [] });
@@ -115,7 +108,13 @@ export default {
     const removeAnswer = (question, index) => {
       question.answers.splice(index, 1);
     };
-
+    const removeApiAnswer = (id) => {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
+      axios.delete(`https://psb.sitebix.com/api/answers/${id}`)
+      .then(() => {
+        store.dispatch('fetchQuestions', { id: survey.value.id });
+      }).catch(error => console.log(error));
+    }
     const submit = async() => {
 
       // Perform submission logic here, e.g., send data to a server
@@ -157,6 +156,7 @@ export default {
       addQuestion,
       addAnswer,
       removeAnswer,
+      removeApiAnswer,
       submit,
     };
   },

@@ -98,7 +98,7 @@
               <td class='text-center'>{{ use.role.name }}</td>
               <td class="align-middle">
                 <div class="col-4">
-                  <a style="cursor: pointer;" @click="showModal(use.id)" data-toggle="modal" class="text-secondary font-weight-bold text-xs mx-4"
+                  <a style="cursor: pointer;" @click="showModal(use.id, use.username, use.email)" data-toggle="modal" class="text-secondary font-weight-bold text-xs mx-4"
                     data-original-title="Edit user">
                     <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
                   </a>
@@ -174,10 +174,10 @@ export default {
     this.$store.dispatch('fetchSurveys');
   },
   methods: {
-    showModal(id) {
-      this.$store.dispatch('fetchUser', { id: id});
-      this.username = this.user?.username;
-      this.email = this.user?.email;
+    showModal(id, username, email) {
+      this.user_id = id;
+      this.username = username;
+      this.email = email;
       this.isModalOpen = true;
     },
     showModall(id) {

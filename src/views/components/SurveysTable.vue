@@ -67,10 +67,10 @@
                       id: survey.id
                     }
                   }">
-                  <!-- <a @click="getSurvey(survey.id)" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
-                    data-original-title="Add question"> -->
+                  <a class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
+                    data-original-title="Add question">
                     <i class="ni ni-world text-dark me-2" aria-hidden="true"></i>Add Question(s)
-                  <!-- </a> -->
+                  </a>
                   </router-link>
                 </div>
               </td>
@@ -129,8 +129,8 @@ export default {
         this.isModalOpen = false;
       },
       getSurvey(id){
+        // this.$store.dispatch('fetchQuestions', { id: id});
         this.$store.dispatch('fetchSurvey', { id: id});
-        this.$store.dispatch('fetchQuestions', { id: id});
       },
       submitForm() {
         // Handle form submission here

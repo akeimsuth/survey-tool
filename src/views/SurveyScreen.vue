@@ -20,8 +20,8 @@
             </div>
             <div class="form-group">
               <label for="type">Type</label>
-              <select name="type" class="form-control" id="type" v-model="type">
-                <option>-- SELECT --</option>
+              <select name="type" class="form-control form-select" id="type" v-model="type">
+                <option value="0">-- SELECT --</option>
                 <option value="technical">Technical</option>
                 <option value="other">Other</option>
               </select>
@@ -46,18 +46,20 @@
         <div v-for="(question, index) in questions" :key="index">
           <strong>{{ question.attributes.question }}</strong>
           <template v-if="question.attributes.type === 'single'">
-            <div style="display: flex; flex-direction: column;">
+            <div style="display: flex; flex-direction: column;" class="form-control">
               <label v-for="(option, optionIndex) in question.attributes.answers.data" :key="optionIndex">
-                <input type="radio" :value="option.id" v-model="selectedAnswers[question.id]" />
+                <input type="radio" :value="option.id" v-model="items[question.id]" @change="addItem(question.id, option.id)"/>
                 {{ option.attributes.answer }}
               </label>
             </div>
           </template>
-          <template v-else-if="question.type === 'multiple'">
+          <template v-else-if="question.attributes.type === 'multiple'">
+            <div style="display: flex; flex-direction: column;" class="form-control">
             <label v-for="(option, optionIndex) in question.attributes.answers.data" :key="optionIndex">
-              <input type="checkbox" :value="option.id" v-model="selectedAnswers[question.id]" />
+              <input type="checkbox" :value="option.id" @change="addItem(question.id, option.id)" />
               {{ option.attributes.answer }}
             </label>
+          </div>
           </template>
         </div>
         <button class="btn btn-info mt-3" type="submit">Submit</button>
@@ -70,6 +72,7 @@
 </template>
   
 <script>
+import _ from 'lodash';
 import { computed } from 'vue';
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
@@ -80,10 +83,12 @@ export default {
   data() {
     return {
       selectedAnswers: [],
+      items: [],
       isModalOpen: false,
       page: '',
-      type: '',
-      desc: ''
+      type: '0',
+      desc: '',
+      checker: '',
     };
   },
   setup() {
@@ -115,6 +120,13 @@ export default {
     // Initialize selectedAnswers with default values
   },
   methods: {
+    emitChanges() {
+      this.$emit('responses', this.selectedAnswers);
+    },
+    addItem(question, answers) {
+      this.selectedAnswers.push({ id: question, answers: answers });
+      //this.emitChanges();
+    },
     showModal() {
       this.isModalOpen = true;
       },
@@ -123,38 +135,41 @@ export default {
       },
     async submitForm() {
       // Process and submit selectedAnswers to your backend, or handle the data as needed
-      console.log('Selected Answers:', JSON.parse(JSON.stringify(this.selectedAnswers)));
-      const data = JSON.parse(JSON.stringify(this.selectedAnswers));
+      console.log('Selected Answers:', _.uniqBy(JSON.parse(JSON.stringify(this.selectedAnswers)),'answers'));
+      console.log('USER::: ', this.$store.getters.getUser.data.user.id);
+      const data = _.uniqBy(JSON.parse(JSON.stringify(this.selectedAnswers)), 'answers');
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.getters.getUser.data.jwt}`;
-      let checker = false;
+
+      if(data.length == 0){
+        toast('Please fill out the form!', {
+          autoClose: 5000,
+          type: toast.TYPE.ERROR
+        })
+        return;
+      }
       for (let index = 0; index < data.length; index++) {
         if (data[index]) {
-          axios.post('https://psb.sitebix.com/api/user-submissions', {
+          axios.post('https://psb.sitebix.com/api/submissions', {
             "data": {
-              "user_question": index,
-              "user_answers": data[index],
-              "user": this.$store.state.user.data.user.id
+              "question": data[index].id,
+              "answers": data[index].answers,
+              "user": this.$store.getters.getUser.data.user.id,
+              "survey": this.survey.id
             }
           }).then(() => {
-            checker = true;
+            this.checker = true;
           })
             .catch(error => {
-              checker = false;
+              this.checker = false;
               console.log(error);
             })
         }
       }
-      if (checker) {
-        toast('Submission Successfull!', {
-          autoClose: 5000,
-          type: toast.TYPE.SUCCESS
-        })
-      } else {
-        toast('Submission Failed!', {
-          autoClose: 5000,
-          type: toast.TYPE.ERROR
-        })
-      }
+      toast('Submission Successfull!', {
+        autoClose: 5000,
+        type: toast.TYPE.SUCCESS
+      })
+      
     },
     submitReport(){
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.getters.getUser.data.jwt}`;
@@ -171,12 +186,14 @@ export default {
               autoClose: 5000,
               type: toast.TYPE.SUCCESS
             })
+            this.closeModal();
           })
             .catch(error => {
               toast('Bug Submission Failed!', {
                 autoClose: 5000,
                 type: toast.TYPE.ERROR
               })
+              this.closeModal();
               console.log(error);
             })
     }
@@ -210,5 +227,10 @@ export default {
   width: auto !important;
   border-radius: 5px;
 }
+.form-control input[type="radio"],
+  .form-control input[type="checkbox"] {
+      display: inline-block;
+      width: auto;
+  }
 </style>
   

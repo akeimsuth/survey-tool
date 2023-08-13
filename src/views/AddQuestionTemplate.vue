@@ -5,6 +5,29 @@
       <div class="col-12">
         <div class="mb-4">
           <div style="position: relative;">
+
+            <div v-for="(question, index) in savedQuestions" :key="index" class="question form-group">
+            <div>
+              <label class="label" for="questionType">Select Question Type:</label>
+              <select :value="question.attributes.type" class="form-control form-select question-type">
+                <option value="0">--SELECT--</option>
+                <option value="single">Single Choice</option>
+                <option value="multiple">Multiple Choice</option>
+              </select>
+            </div>
+            <label class="label">Question {{ index + 1 }}:</label>
+            <input class="form-control question-content" type="text" :value="question.attributes.question" placeholder="Enter your question" required>
+            
+            <div v-for="(answer, answerIndex) in question.attributes.answers.data" :key="answerIndex" class="answer-container">
+              <div class="input-group">
+                <input class="form-control question-options" type="text" :value="answer.attributes.answer" placeholder="Enter your answer" required>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeApiAnswer(answer.id)">Remove Answer</button>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-sm btn-secondary add-options my-3" @click="addAnswer(question)">Add Answer</button>
+          </div>
   
             <div v-for="(question, index) in questions" :key="index" class="question form-group">
               <div>
@@ -49,6 +72,7 @@
   import { ref } from 'vue';
   import { computed } from 'vue';
   import { useStore } from "vuex";
+  import { useRoute } from "vue-router";
   import { toast } from 'vue3-toastify';
   import axios from "axios";
   import 'vue3-toastify/dist/index.css';
@@ -58,10 +82,17 @@
       const selectedType = ref('single');
       const questions = ref([]);
       const store = useStore();
-  
+      const route = useRoute();
+      const id = route.params.id;
+      store.dispatch('fetchTemplate', { id: id });
+      store.dispatch('fetchTemplateQuestions', { id: id });
       let template = computed(function () {
         return store.getters.getTemplate
       });
+
+      let savedQuestions = computed(function () {
+      return store.getters.getTemplateQuestions
+    });
   
       const addQuestion = () => {
         questions.value.push({ type: 'none', text: '', answers: [] });
@@ -74,11 +105,17 @@
       const removeAnswer = (question, index) => {
         question.answers.splice(index, 1);
       };
+
+      const removeApiAnswer = (id) => {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
+      axios.delete(`https://psb.sitebix.com/api/user-answers/${id}`)
+      .then(() => {
+        store.dispatch('fetchTemplateQuestions', { id: template.value.id });
+      }).catch(error => console.log(error));
+    }
   
       const submit = async() => {
-      const id = toast.loading(
-        'Please wait...'
-      );
+        const save_questions = [];
       // Perform submission logic here, e.g., send data to a server
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
       for (let index = 0; index < questions.value.length; index++){
@@ -91,6 +128,8 @@
             "template": template.value.id
           }
         })
+        if(quest.data.data.id){
+          save_questions.push(quest.data.data.id);
         for (let j = 0; j < questions.value[index].answers.length; j++){
               console.log('QUEST: ', quest.data.data);
               await axios.post('https://psb.sitebix.com/api/user-answers', {
@@ -100,26 +139,32 @@
               }
             });
         }
+      }
     }
-    toast.update(id, {
-      render: '<p>Submitted Questions and Answers<p>',
-      autoClose: true,
-      closeOnClick: true,
-      closeButton: true,
-      type: 'success',
-      isLoading: false,
-    });
+    axios.put(`https://psb.sitebix.com/api/user-templates/${template.value.id}`, {
+              "data": {
+                "name": template.value.attributes.name,
+                "user_questions": save_questions
+              }
+            }).then(() => {
+              toast("Questions and Answers Created Successfully!", {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
+              });
+            }).catch(error => console.log(error));
       console.log('Submitted Questions and Answers:', questions.value);
-      toast.done(id);
+
     };
   
       return {
         selectedType,
         questions,
         template,
+        savedQuestions,
         addQuestion,
         addAnswer,
         removeAnswer,
+        removeApiAnswer,
         submit,
       };
     },

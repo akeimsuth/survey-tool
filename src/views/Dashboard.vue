@@ -49,7 +49,7 @@
       <div class="col-xl-3 col-sm-6 mb-xl-0">
         <mini-statistics-card
           title="Bug report"
-          value="0"
+          :value="bugs"
           :percentage="{
             value: '+5%',
             color: 'text-success',
@@ -218,10 +218,15 @@ export default {
       return store.getters.getUserCount
     });
 
+    let bugs = computed(function () {
+      return store.getters.getBugCount
+    });
+
     return {
       modules,
       surveys,
-      users
+      users,
+      bugs
     }
   },
   mounted() {

@@ -30,7 +30,7 @@
                       id: survey.id
                     }
                   }">
-                    <button data-toggle="modal" @click="showModal(survey.id)" type="button"
+                    <button data-toggle="modal" type="button"
                       class=" btn btn-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
                       <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Open
                   </button>

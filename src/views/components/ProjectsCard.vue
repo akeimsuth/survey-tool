@@ -76,7 +76,7 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2">View</span>
+                  <span class="text-xs font-weight-bold mx-2" @click="exportDoc">Download</span>
                 </div>
               </td>
             </tr>
@@ -93,7 +93,7 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2">View</span>
+                  <span class="text-xs font-weight-bold mx-2">Download</span>
                 </div>
               </td>
             </tr>
@@ -111,7 +111,7 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2">View</span>
+                  <span class="text-xs font-weight-bold mx-2">Download</span>
                 </div>
               </td>
             </tr>
@@ -145,6 +145,9 @@ import img18 from "../../assets/img/team-4.jpg";
 import img19 from "../../assets/img/small-logos/logo-invision.svg";
 import img20 from "../../assets/img/team-1.jpg";
 import img21 from "../../assets/img/team-4.jpg";
+// import { WidthType, Document, Paragraph } 
+//   from "docx";
+// import { saveAs } from "file-saver";
 
 export default {
   name: "projects-card",
@@ -171,13 +174,83 @@ export default {
       img19,
       img20,
       img21,
+
+      state: {
+        name: 'San Luis Potosi',
+        map: 'data:image/png;base64',
+        municipalities: [
+          {name:'San Luis Potosi', population: 824000}, 
+          {name:'Rio Verde', population: 160000},
+          {name:'Cd Valles', population: 176000},
+          {name:'Matehuala', population:82726}
+        ],
+        tourist_attractions: [
+          'Tamtoc', 'Sótano de las Golondrinas', 'Cascada de Tamul' 
+        ]
+      }
     };
   },
   components: {
- 
+
   },
   mounted() {
     setTooltip();
   },
+  methods: {
+//     exportDoc(){
+//             // Create a new Document an save it in a variable
+//             let doc = new Document();
+
+// // Add paragraph in the document
+// doc.addParagraph(new Paragraph(`Detailed Report for ${this.state.name}`).title().center());
+
+// // Add heading for map
+// doc.addParagraph(new Paragraph(`State Map`).heading1().thematicBreak().center());
+
+// // Add map image
+// doc.createImage(this.state.map, 600, 250, {});
+
+// // Add heading for attractions
+// doc.addParagraph(new Paragraph(`Tourist Attractions`).heading1().thematicBreak().center());
+
+// // Bullet points
+// for (let attraction of this.state.tourist_attractions) {
+//   doc.addParagraph(new Paragraph(attraction).bullet());
+// }
+
+// // Add heading for municipalities
+// doc.addParagraph(new Paragraph(`Municipalities`).heading1().thematicBreak().center());
+
+// // Create table
+// let municipalities_table = doc.createTable({
+//   rows: this.state.municipalities.length+1,
+//   columns: 2,
+//   width: 100,
+//   widthUnitType: WidthType.AUTO,
+//   columnWidths: [2934, 2934],
+// });
+// municipalities_table.getCell(0, 0).addParagraph(new Paragraph("Name"));
+// municipalities_table.getCell(0, 1).addParagraph(new Paragraph("Population"));
+
+// for (let [index, municipality] of this.state.municipalities.entries()) {
+//   municipalities_table.getCell(index+1, 0).addParagraph(new Paragraph(municipality.name));
+//   municipalities_table.getCell(index+1, 1).addParagraph(new Paragraph(municipality.population));
+// }
+
+// // To export into a .docx file
+// // let packer = new Packer();
+
+// // packer.toBlob(doc).then(blob => {
+// //   saveAs(blob, "detailed_report.docx");
+
+
+// // });
+//     }
+  }
 };
 </script>
+<style>
+.text-xs{
+  cursor: pointer;
+}
+</style>
