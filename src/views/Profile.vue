@@ -140,7 +140,7 @@
                 <label class="form-label">Name</label>
                 <div class="form-group">
                   <div class="">
-                    <input id="firstName" type="text" :value="username" class="form-control form-control-default" name="" placeholder="Alec"
+                    <input id="firstName" type="text" v-model="username" class="form-control form-control-default" name="" placeholder="Alec"
                       isrequired="false">
                   </div>
                 </div>
@@ -149,7 +149,7 @@
                 <label class="form-label">Email</label>
                 <div class="form-group">
                   <div class="">
-                    <input id="lastName" type="text" class="form-control form-control-default" :value="email"
+                    <input v-model="email" id="lastName" type="text" class="form-control form-control-default"
                       placeholder="Thompson" isrequired="false">
                   </div>
                 </div>
@@ -158,7 +158,7 @@
                 <label class="form-label">Old Password</label>
                 <div class="form-group">
                   <div class="">
-                    <input id="oldPassword" type="password" class="form-control form-control-default" name=""
+                    <input v-model="oldPassword" id="oldPassword" type="password" class="form-control form-control-default" name=""
                       >
                   </div>
                 </div>
@@ -167,7 +167,7 @@
                 <label class="form-label">New Password</label>
                 <div class="form-group">
                   <div class="">
-                    <input id="newPassword" type="password" class="form-control form-control-default" name=""
+                    <input v-model="newPassword" id="newPassword" type="password" class="form-control form-control-default" name=""
                       >
                   </div>
                 </div>
@@ -204,8 +204,10 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
-import {computed} from 'vue';
-import {useStore} from "vuex";
+// import {computed} from 'vue';
+// import {useStore} from "vuex";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
   name: "ProfileOverview",
@@ -230,24 +232,28 @@ export default {
       faFacebook,
       faTwitter,
       faInstagram,
+      username: this.$store.state.user?.data?.user?.username,
+      email: this.$store.state.user?.data?.user?.email,
+      newPassword: null,
+      oldPassword: null
     };
   },
   setup(){
-    const store = useStore();
+    // const store = useStore();
 
-    let username = computed(function () {
-      return store.state.user?.data?.user?.username
-    });
+    // let username = computed(function () {
+    //   return store.state.user?.data?.user?.username
+    // });
 
-    let email = computed(function () {
-      return store.state.user?.data?.user?.email
-    });
+    // let email = computed(function () {
+    //   return store.state.user?.data?.user?.email
+    // });
 
 
-    return {
-      username,
-      email
-    }
+    // return {
+    //   username,
+    //   email
+    // }
   },
   mounted() {
     this.$store.state.isAbsolute = true;
@@ -257,5 +263,27 @@ export default {
   beforeUnmount() {
     this.$store.state.isAbsolute = false;
   },
+  methods: {
+    submitForm() {
+        // Handle form submission here
+        // For demonstration, we'll just log the user input
+        if(this.oldPassword && this.newPassword){
+            if(this.oldPassword === this.newPassword){
+              this.$store.dispatch('updateUser', { id: this.id, username: this.username, email: this.email, password: this.newPassword})
+              toast("User Info Updated!", {
+                      autoClose: 3000,
+                      type: toast.TYPE.SUCCESS
+              });
+            }
+        } else {
+          this.$store.dispatch('updateUser', { id: this.id, username: this.username, email: this.email})
+          toast("User Info Updated!", {
+                  autoClose: 3000,
+                  type: toast.TYPE.SUCCESS
+          });
+        }
+        this.closeModal();
+      },
+  }
 };
 </script>

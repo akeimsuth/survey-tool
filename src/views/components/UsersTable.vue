@@ -43,7 +43,7 @@
       </form>
     </div>
   </div>
-    <!-- Modal -->
+    <!-- User Survey Modal -->
     <div v-if="issModalOpen" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -63,7 +63,7 @@
         <div class="mb-3">
           <select class="form-control form-select" v-model="survey_id" @change="getSurvey">
             <option>--SELECT--</option>
-            <option name="survey_id" v-for="survey in surveys" :key="survey.id" :value="survey.id">{{ survey.attributes.name }}</option>
+            <option name="survey_id" v-for="survey in surveys" :key="survey.id" :value="survey.id">{{ survey.name }}</option>
           </select>
         </div>
 
@@ -74,6 +74,39 @@
       </form>
     </div>
   </div>
+
+      <!-- User Template Modal -->
+      <div v-if="isTemplateModalOpen" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalLabel">Assign User</h5>
+        <button @click="closeModalTemplates" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="modal-body">
+        <div v-if="assigned">
+          <label>Assigned Template</label>
+          <ul id="input_group">
+            <li name="survey">{{ assignedTemp.name }}<a class="px-2 mx-2 del-survey">Remove</a></li>
+          </ul>
+        </div>
+        <label>Template(s)</label>
+        <div class="mb-3">
+          <select class="form-control form-select" v-model="template_id" @change="getTemplate">
+            <option value="0">--SELECT--</option>
+            <option name="survey_id" v-for="template in templates" :key="template.id" :value="template.id">{{ template.name }}</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button @click="closeModalTemplates" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button @click="submitFormTemplates" type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="card mb-4">
     <div class="card-header pb-0">
       <h6>Users table</h6>
@@ -106,6 +139,10 @@
                     class="text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
                     <i class="fas fa-plus-alt text-dark me-2" aria-hidden="true"></i>Assign Survey
                   </a>
+                  <a style="cursor: pointer;" @click="showTemplateModal(use.id)" v-show="use.role.type === 'authenticated'" data-toggle="modal"
+                    class="text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
+                    <i class="fas fa-plus-alt text-dark me-2" aria-hidden="true"></i>Assign Template
+                  </a>
                 </div>
               </td>
               <!-- Add other user information columns here -->
@@ -121,6 +158,8 @@
 import CreateUser from './CreateUser.vue';
 import { computed } from 'vue';
 import { useStore } from "vuex";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 export default {
   name: "users-table",
   components: {
@@ -130,11 +169,13 @@ export default {
     return {
       isModalOpen: false,
       issModalOpen: false,
+      isTemplateModalOpen: false,
       user_id: '',
       username: '',
       email: '',
       password: '',
       survey_id: '',
+      template_id: '0',
       type: 'password'
     };
   },
@@ -149,13 +190,25 @@ export default {
       return store.getters.getSurveys
     });
 
+    let templates = computed(function () {
+      return store.getters.getTemplates
+    });
+
     let surve = computed(function () {
       return store.getters.getSurvey
+    });
+
+    let temp = computed(function () {
+      return store.getters.getTemplate
     });
 
     
     let assigned = computed(function () {
       return store.getters.getAssignedSurveys
+    });
+
+    let assignedTemp = computed(function () {
+      return store.getters.getAssignedTemplates
     });
 
     let user = computed(function () {
@@ -167,7 +220,10 @@ export default {
       user,
       surveys,
       surve,
-      assigned
+      assigned,
+      assignedTemp,
+      templates,
+      temp
     }
   },
   mounted() {
@@ -187,11 +243,24 @@ export default {
         console.log("ASSIGNED: ",this.assigned);
         this.issModalOpen = true;
       },
+      showTemplateModal(id) {
+        this.user_id = id;
+        this.$store.dispatch('fetchAssignedTemplates', { id: id});
+        //this.$store.dispatch('fetchAssignedSurveys', { id: id});
+        console.log("ASSIGNED: ",this.assignedTemp);
+        this.isTemplateModalOpen = true;
+      },
       closeModal() {
         this.isModalOpen = false;
       },
+      closeModalTemplates() {
+        this.isTemplateModalOpen = false;
+      },
       getSurvey(){
         this.$store.dispatch('fetchSurvey', { id: this.survey_id});
+      },
+      getTemplate(){
+        this.$store.dispatch('fetchTemplate', { id: this.template_id});
       },
       closeModall() {
         this.issModalOpen = false;
@@ -200,21 +269,31 @@ export default {
         // Handle form submission here
         // For demonstration, we'll just log the user input
         this.$store.dispatch('updateUser', { id: this.id, username: this.username, email: this.email, password: this.password})
-        console.log({
-          name: this.username,
-          description: this.email,
+        toast("User Info Updated!", {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
         });
         this.closeModal();
       },
       submitFormm() {
         // Handle form submission here
         // For demonstration, we'll just log the user input
-        this.$store.dispatch('updateSurvey', { id: this.survey_id, name: this.surve.attributes.name, description: this.surve.attributes.description, users: this.user_id})
-        console.log({
-          name: this.username,
-          description: this.email,
+        this.$store.dispatch('updateSurvey', { id: this.survey_id, name: this.surve.name, description: this.surve.description, users: this.user_id})
+        toast(`User Assigned to Survey ${this.surve.name}!`, {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
         });
         this.closeModall();
+      },
+      submitFormTemplates() {
+        // Handle form submission here
+        // For demonstration, we'll just log the user input
+        this.$store.dispatch('updateTemplate', { id: this.template_id, name: this.temp.name, users: this.user_id})
+        toast(`User Assigned to Template ${this.temp.name}!`, {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
+        });
+        this.closeModalTemplates();
       },
       showPassword(){
         // Create a reactive variable to hold the selected input type

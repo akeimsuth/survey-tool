@@ -36,7 +36,7 @@
             <select @change="selectAccount" id="account" name="account" class="form-control form-select mb-0 me-3 px-5" v-if="auth" v-model="accountId">
               <option value="0">select account</option>
               <option v-for="account in accounts" :key="account.id" :value="account.id">
-                {{ account.attributes.name }}
+                {{ account.name }}
               </option>
 
             </select>
@@ -77,7 +77,7 @@ export default {
     const store = useStore();
 
     let auth = computed(function () {
-      return store.state.user?.data?.user?.username == 'admin'
+      return store.state.role == 'auth_admin'
     });
 
 

@@ -44,9 +44,9 @@
           <tbody>
             <tr v-for="mod in modules" :key="mod.id">
               <td>{{ mod.id }}</td>
-              <td>{{ mod.attributes.name }}</td>
+              <td>{{ mod.name }}</td>
               <td class="align-middle">
-                <a style="cursor: pointer;" data-toggle="modal" @click="showModal(mod.id, mod.attributes.name, mod.attributes.description)"
+                <a style="cursor: pointer;" data-toggle="modal" @click="showModal(mod.id, mod.name, mod.description)"
                   class="text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
                   <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
                 </a>

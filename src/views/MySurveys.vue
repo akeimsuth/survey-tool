@@ -14,6 +14,9 @@
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                   Name
                 </th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                  Completion Date
+                </th>
                 <th class="text-secondary opacity-7">Actions</th>
               </tr>
             </thead>
@@ -21,9 +24,15 @@
               <tr v-for="survey in surveys" :key="survey.id">
                 <td>{{ survey.id }}</td>
                 <td>{{ survey.name }}</td>
+                <td>{{ survey?.completed }}</td>
                 <td class="align-middle">
                   <div class="col-4">
+                  <button v-if="survey.completed" data-toggle="modal" type="button" disabled
+                      class=" btn btn-success font-weight-bold text-xs mx-4" data-original-title="Edit user">
+                      COMPLETED
+                  </button>
                     <router-link
+                    v-else
                   :to="{
                     name: 'SurveyScreen',
                     params: {
@@ -32,7 +41,7 @@
                   }">
                     <button data-toggle="modal" type="button"
                       class=" btn btn-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
-                      <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Open
+                      OPEN
                   </button>
                   </router-link>
                   </div>
@@ -63,7 +72,7 @@
       let surveys = computed(function () {
         return store.getters.getSurveys
       });
-  
+      console.log('surveys: ', surveys);
       return {
         surveys
       }

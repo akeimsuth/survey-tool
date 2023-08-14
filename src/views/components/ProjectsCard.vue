@@ -76,7 +76,7 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2" @click="exportDoc">Download</span>
+                  <span class="text-xs font-weight-bold mx-2" @click="generateDocument">Download</span>
                 </div>
               </td>
             </tr>
@@ -145,9 +145,12 @@ import img18 from "../../assets/img/team-4.jpg";
 import img19 from "../../assets/img/small-logos/logo-invision.svg";
 import img20 from "../../assets/img/team-1.jpg";
 import img21 from "../../assets/img/team-4.jpg";
-// import { WidthType, Document, Paragraph } 
-//   from "docx";
-// import { saveAs } from "file-saver";
+// import test_doc from "../../assets/templates/test_doc.zip";
+import Docxtemplater from "docxtemplater";
+import PizZip from "pizzip";
+import PizZipUtils from "pizzip/utils/index.js";
+import { saveAs } from "file-saver";
+import fs from 'file-system';
 
 export default {
   name: "projects-card",
@@ -197,55 +200,77 @@ export default {
     setTooltip();
   },
   methods: {
-//     exportDoc(){
-//             // Create a new Document an save it in a variable
-//             let doc = new Document();
+    loadFile(url, callback) {
+    PizZipUtils.getBinaryContent(url, callback);
+  },
+  renderDoc() {
+      this.loadFile("https://drive.google.com/uc?export=download&id=1zDso0rb2b5gsa7a3pKUYH56BT_LblnG0Lq2EAYyPgqc", function(
+        error,
+        content
+      ) {
+        if (error) {
+          throw error;
+        }
+        console.log(content);
+        const zip = new PizZip(content);
+        const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+        doc.setData({
+          first_name: "John",
+          last_name: "Doe",
+          phone: "0652455478",
+          description: "New Website"
+        });
+        try {
+          // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
+          doc.render();
+        } catch (error) {
+          // The error thrown here contains additional information when logged with JSON.stringify (it contains a properties object containing all suberrors).
 
-// // Add paragraph in the document
-// doc.addParagraph(new Paragraph(`Detailed Report for ${this.state.name}`).title().center());
+          console.log(JSON.stringify({ error: error }));
 
-// // Add heading for map
-// doc.addParagraph(new Paragraph(`State Map`).heading1().thematicBreak().center());
+          if (error.properties && error.properties.errors instanceof Array) {
+            const errorMessages = error.properties.errors
+              .map(function(error) {
+                return error.properties.explanation;
+              })
+              .join("\n");
+            console.log("errorMessages", errorMessages);
+            // errorMessages is a humanly readable message looking like this :
+            // 'The tag beginning with "foobar" is unopened'
+          }
+          throw error;
+        }
+        const out = doc.getZip().generate({
+          type: "blob",
+          mimeType:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        });
+        // Output the document using Data-URI
+        saveAs(out, "output.docx");
+      });
+    },
+    async generateDocument() {
+      const templatePath = "../../assets/templates/test_doc.docx"; // Path to your docx template
 
-// // Add map image
-// doc.createImage(this.state.map, 600, 250, {});
-
-// // Add heading for attractions
-// doc.addParagraph(new Paragraph(`Tourist Attractions`).heading1().thematicBreak().center());
-
-// // Bullet points
-// for (let attraction of this.state.tourist_attractions) {
-//   doc.addParagraph(new Paragraph(attraction).bullet());
-// }
-
-// // Add heading for municipalities
-// doc.addParagraph(new Paragraph(`Municipalities`).heading1().thematicBreak().center());
-
-// // Create table
-// let municipalities_table = doc.createTable({
-//   rows: this.state.municipalities.length+1,
-//   columns: 2,
-//   width: 100,
-//   widthUnitType: WidthType.AUTO,
-//   columnWidths: [2934, 2934],
-// });
-// municipalities_table.getCell(0, 0).addParagraph(new Paragraph("Name"));
-// municipalities_table.getCell(0, 1).addParagraph(new Paragraph("Population"));
-
-// for (let [index, municipality] of this.state.municipalities.entries()) {
-//   municipalities_table.getCell(index+1, 0).addParagraph(new Paragraph(municipality.name));
-//   municipalities_table.getCell(index+1, 1).addParagraph(new Paragraph(municipality.population));
-// }
-
-// // To export into a .docx file
-// // let packer = new Packer();
-
-// // packer.toBlob(doc).then(blob => {
-// //   saveAs(blob, "detailed_report.docx");
+      // Load the template
+      const templateContent = fs.readFileSync(templatePath, 'binary');
+      const zip = new PizZip(templateContent);
 
 
-// // });
-//     }
+      // Replace a placeholder in the template with the asset content
+      const doc = new Docxtemplater().loadZip(zip);
+      doc.setData({}); // Your data for the template
+      doc.render();
+      const generatedContent = doc.getZip().generate({
+          type: "blob",
+          mimeType:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        });
+      saveAs(generatedContent, "output.docx");
+      // Save the generated document to a file
+      //fs.writeFileSync(outputFilePath, generatedContent);
+      console.log('Document generated successfully.');
+    },
   }
 };
 </script>

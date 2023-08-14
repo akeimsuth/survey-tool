@@ -44,7 +44,7 @@
           <tbody>
             <tr v-for="temp in templates" :key="temp.id">
               <td>{{ temp.id }}</td>
-              <td>{{ temp.attributes.name }}</td>
+              <td>{{ temp.name }}</td>
               <td class="align-middle">
                 <div class="col-4">
                   <a style="cursor: pointer;" @click="showModal(temp.id)" data-toggle="modal"
@@ -118,8 +118,8 @@ export default {
     showModal(id) {
       this.$store.dispatch('fetchTemplate', { id: id});
       this.id = this.template?.id;
-      this.name = this.template?.attributes.name;
-      this.description = this.template?.attributes.description;
+      this.name = this.template?.name;
+      this.description = this.template?.description;
       this.isModalOpen = true;
       },
       closeModal() {

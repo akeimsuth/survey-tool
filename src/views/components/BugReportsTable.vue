@@ -65,10 +65,10 @@
             </thead>
             <tbody>
               <tr v-for="bug in bugs" :key="bug.id">
-                <td>{{ bug.attributes.survey.data.attributes.name }}</td>
-                <td>{{ bug.attributes.page }}</td>
-                <td>{{ bug.attributes.type }}</td>
-                <td><button @click="showModal(bug.id, bug.attributes.type)" class="btn btn-warning text-white">{{ bug.attributes.status }}</button></td>
+                <td>{{ bug.survey.name }}</td>
+                <td>{{ bug.page }}</td>
+                <td>{{ bug.type }}</td>
+                <td><button @click="showModal(bug.id, bug.type)" class="btn btn-warning text-white">{{ bug.status }}</button></td>
                 <td></td>
                 <!-- Add other user information columns here -->
               </tr>

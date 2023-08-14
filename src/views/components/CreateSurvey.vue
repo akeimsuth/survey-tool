@@ -25,7 +25,7 @@
                   <select name="module" class="form-control form-select" v-model="mod">
                     <option>-- SELECT --</option>
                     <option v-for="mod in modules" :key="mod.id" :value="mod.id">
-                        {{ mod.attributes.name }}
+                        {{ mod.name }}
                     </option>
                   </select>
               </div>

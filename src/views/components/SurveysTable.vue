@@ -19,7 +19,7 @@
                   <select name="module" class="form-control form-select">
                     <option>-- SELECT --</option>
                     <option v-for="mod in modules" :key="mod.id" :value="mod.id">
-                        {{ mod.attributes.name }}
+                        {{ mod.name }}
                     </option>
                   </select>
               </div> -->
@@ -53,10 +53,10 @@
           <tbody>
             <tr v-for="survey in surveys" :key="survey.id">
               <td>{{ survey.id }}</td>
-              <td>{{ survey.attributes.name }}</td>
+              <td>{{ survey.name }}</td>
               <td class="align-middle">
                 <div class="col-4">
-                  <a style="cursor: pointer;" data-toggle="modal" @click="showModal(survey.id, survey.attributes.name, survey.attributes.description)"
+                  <a style="cursor: pointer;" data-toggle="modal" @click="showModal(survey.id, survey.name, survey.description)"
                     class="text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
                     <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
                   </a>

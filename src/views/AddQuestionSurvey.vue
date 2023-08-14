@@ -1,7 +1,7 @@
 <template>
   <div style="background-color: #fff" class="container-fluid py-4">
-    <h2>{{ survey.attributes.name }}</h2>
-    <div v-html="survey.attributes.description"></div>
+    <h2>{{ survey.name }}</h2>
+    <div v-html="survey.description"></div>
     <div class="col-12">
       <div class="mb-4">
         <div style="position: relative;">
@@ -9,24 +9,25 @@
           <div v-for="(question, index) in savedQuestions" :key="index" class="question form-group">
             <div>
               <label class="label" for="questionType">Select Question Type:</label>
-              <select :value="question.attributes.type" class="form-control form-select question-type">
+              <select :value="question.type" class="form-control form-select question-type">
                 <option value="0">--SELECT--</option>
                 <option value="single">Single Choice</option>
                 <option value="multiple">Multiple Choice</option>
+                <option value="input">Input</option>
               </select>
             </div>
             <label class="label">Question {{ index + 1 }}:</label>
-            <input class="form-control question-content" type="text" :value="question.attributes.question" placeholder="Enter your question" required>
+            <input class="form-control question-content" type="text" :value="question.question" placeholder="Enter your question" required>
             
-            <div v-for="(answer, answerIndex) in question.attributes.answers.data" :key="answerIndex" class="answer-container">
+            <div v-for="(answer, answerIndex) in question.answers" :key="answerIndex" class="answer-container">
               <div class="input-group">
-                <input class="form-control question-options" type="text" :value="answer.attributes.answer" placeholder="Enter your answer" required>
+                <input class="form-control question-options" type="text" :value="answer.answer" placeholder="Enter your answer" required>
                 <div class="input-group-append">
                   <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeApiAnswer(answer.id)">Remove Answer</button>
                 </div>
               </div>
             </div>
-            <button class="btn btn-sm btn-secondary add-options my-3" @click="addAnswer(question)">Add Answer</button>
+            <button v-if="question.type !== 'input'" class="btn btn-sm btn-secondary add-options my-3" @click="addAnswer(question)">Add Answer</button>
           </div>
 
           <div v-for="(question, index) in questions" :key="index" class="question form-group">
@@ -36,6 +37,7 @@
                 <option value="0">--SELECT--</option>
                 <option value="single">Single Choice</option>
                 <option value="multiple">Multiple Choice</option>
+                <option value="input">Input</option>
               </select>
             </div>
             <label class="label">Question {{ index + 1 + savedQuestions.length }}:</label>
@@ -49,7 +51,7 @@
                 </div>
               </div>
             </div>
-            <button class="btn btn-sm btn-secondary add-options my-3" @click="addAnswer(question)">Add Answer</button>
+            <button v-if="question.type !== 'input'" class="btn btn-sm btn-secondary add-options my-3" @click="addAnswer(question)">Add Answer</button>
           </div>
 
           <!-- Add more questions and answer options as needed -->
@@ -129,13 +131,13 @@ export default {
             "survey": survey.value.id
           }
         })
-        if(quest.data.data.id){
+        if(quest.data.id){
           for (let j = 0; j < questions.value[index].answers.length; j++){
                 console.log('QUEST: ', quest.data.data);
                 await axios.post('https://psb.sitebix.com/api/answers', {
                 "data": {
                   "answer": questions.value[index].answers[j].text,
-                  "question": quest.data.data.id
+                  "question": quest.data.id
                 }
               });
           }

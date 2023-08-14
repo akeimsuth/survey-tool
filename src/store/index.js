@@ -2,6 +2,8 @@ import { createStore } from "vuex";
 import bootstrap from "bootstrap/dist/js/bootstrap.min.js";
 import axios from "axios";
 import { useStore } from "vuex";
+import moment from "moment";
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
@@ -16,6 +18,8 @@ export default createStore({
     survey: null,
     modules: null,
     assignedSurveys: null,
+    assignedTemplates: null,
+    firstTime: true,
     module: null,
     templates: null,
     template: null,
@@ -134,11 +138,17 @@ export default createStore({
     setAssignedSurveys(state, assignedSurveys){
       state.assignedSurveys = assignedSurveys;
     },
+    setAssignedTemplates(state, assignedTemplates){
+      state.assignedTemplates = assignedTemplates;
+    },
     setBugs(state, bugs){
       state.bugs = bugs;
     },
     setBugCount(state, bugCount){
       state.bugCount = bugCount;
+    },
+    setFirstTime(state, firstTime){
+      state.firstTime = firstTime;
     }
   },
   actions: {
@@ -156,6 +166,7 @@ export default createStore({
       dispatch('getDashboardCount');
       dispatch('fetchUsers');
       dispatch('fetchAssignedSurveys', this.state.user.data.user.id);
+      dispatch('fetchAssignedTemplates');
     },
     async login({ commit, dispatch }, { email, password}){
       try {
@@ -168,6 +179,7 @@ export default createStore({
         commit('setUser', data);
         if(data){
           await dispatch('getRole');
+          await dispatch('fetchAssignedTemplates');
         }
         console.log('SUCCESS!!');
         return this.state.role;
@@ -182,7 +194,7 @@ export default createStore({
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
         const data = await axios.get(`https://psb.sitebix.com/api/users/${this.state.user.data.user.id}?populate=role`);
-        console.log('DATA:: ', data.data);
+        console.log('DATA ROLE:: ', data.data);
         commit('setRole', data.data.role.type);
       } catch (error) {
         console.log('FAILED!!!');
@@ -192,7 +204,7 @@ export default createStore({
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
         const data = await axios.post(`https://psb.sitebix.com/api/users/${id}`);
-        commit('setSingleUser', data.data);
+        commit('setSingleUser', data);
       } catch (error) {
         console.log('FAILED!!!');
       }
@@ -268,12 +280,13 @@ export default createStore({
           console.error('Error fetching users:', error);
         });
     },
-    fetchUserSurveys({ commit }) {
+    fetchUserSurveys({ commit, dispatch }) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`https://psb.sitebix.com/api/users/${this.state.user.data.user.id}?populate=surveys`)
         .then(response => {
           commit('setSurveys',response.data.surveys);
+          dispatch('checkSubmission', response.data.surveys);
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -283,8 +296,47 @@ export default createStore({
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`https://psb.sitebix.com/api/users/${id}?populate=surveys`)
-        .then(response => {
+        .then(async(response) => {
           commit('setAssignedSurveys',response.data.surveys);
+        })
+        .catch(error => {
+          console.error('Error fetching users:', error);
+        });
+    },
+    async checkSubmission({ commit }, { val }) {
+      console.log('TOKEN: ',this.state.user.data.jwt)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
+      const arr = this.state.surveys;
+      console.log('VAL: ', val);
+      for (let index = 0; index < 1; index++) {
+        const data = await axios.get(`https://psb.sitebix.com/api/submissions/?filters[user][id][$eq]=${this.state.user.data.user.id}&filters[survey][id][$eq]=${arr[index].id}`)
+        console.log('DATE: ', data.data.data);
+        arr[index].completed = moment(data.data.data[0].updatedAt).format('MMM DD, YYYY');
+      }
+      commit('setAssignedSurveys', arr);
+      
+    },
+    checkIfFirstTime({ commit }) {
+      console.log('TOKEN: ',this.state.user.data.jwt)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
+      axios.get(`https://psb.sitebix.com/api/user-submissions/?filters[user][id][$eq]=${this.state.user.data.user.id}&filters[user_template][id][$eq]=${this.state.assignedTemplates.id}`)
+        .then(response => {
+          console.log('RESP: ', response.data.data.length > 0);
+          commit('setFirstTime',response.data.data.length == 0);
+          
+        })
+        .catch(error => {
+          console.error('Error fetching users:', error);
+        });
+    },
+    fetchAssignedTemplates({ commit, dispatch }) {
+      console.log('TOKEN: ',this.state.user.data.jwt)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
+      axios.get(`https://psb.sitebix.com/api/users/${this.state.user.data.user.id}?populate=user_template`)
+        .then(async(response) => {
+          console.log('TOP: ', response.data);
+          commit('setAssignedTemplates',response.data.user_template);
+          await dispatch('checkIfFirstTime');
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -294,8 +346,7 @@ export default createStore({
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`https://psb.sitebix.com/api/surveys/${id}?populate[questions][populate]=answers`)
         .then(response => {
-          commit('setQuestions',response.data.data.attributes.questions.data);
-          console.log('QUESTIONS: ', response.data.data.attributes.questions.data);
+          commit('setQuestions',response.data.data.questions);
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -303,9 +354,9 @@ export default createStore({
     },
     fetchTemplateQuestions({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/users/${id}?populate[user-questions][populate]=answers`)
+      axios.get(`https://psb.sitebix.com/api/user-templates/${id}?populate[user_questions][populate]=user_answers`)
         .then(response => {
-          commit('setTemplateQuestions',response.data.data.attributes.questions.data);
+          commit('setTemplateQuestions',response.data.data.user_questions);
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -386,12 +437,13 @@ export default createStore({
           console.error('Error fetching users:', error);
         });
     },
-    updateTemplate({ dispatch }, { id, name, description }) {
+    updateTemplate({ dispatch }, { id, name, description, users }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.put(`https://psb.sitebix.com/api/user-templates/${id}`, {
         "data": {
           "name": name,
           "description": description,
+          "users": users
         }
       })
         .then(() => {
@@ -496,8 +548,7 @@ export default createStore({
     },
     logout({ commit }) {
       // Simulate a logout process here
-      const isAuthenticated = false;
-      commit('setIsAuthenticated', isAuthenticated);
+      commit('setIsAuthenticated', false);
       commit('setUser', null);
     },
   },
@@ -556,5 +607,12 @@ export default createStore({
     getAssignedSurveys(state){
       return state.assignedSurveys;
     },
+    getAssignedTemplates(state){
+      return state.assignedTemplates;
+    },
+    getFirstTime(state){
+      return state.firstTime;
+    },
   },
+  plugins: [createPersistedState()],
 });
