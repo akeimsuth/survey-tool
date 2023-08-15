@@ -17,6 +17,12 @@ import NotFound from "@/views/NotFound.vue";
 
 const routes = [
   {
+    path: "/",
+    name: "Home",
+    component: Dashboard,
+    meta: { requiresAuth: true }
+  },
+  {
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,

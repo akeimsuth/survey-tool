@@ -106,7 +106,7 @@ export default {
   },
   data() {
     return {
-      title: "Potawanami Tool",
+      title: "Potawatomi Survey Tool",
       controls: "dashboardsExamples",
       isActive: "active",
     };

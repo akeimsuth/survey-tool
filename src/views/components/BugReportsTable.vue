@@ -46,17 +46,17 @@
             <thead>
               <tr>
                 <th
-                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
                 >
                   Survey
                 </th>
                 <th
-                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
                 >
                   Page
                 </th>
                 <th
-                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2"
                 >
                   Type
                 </th>
