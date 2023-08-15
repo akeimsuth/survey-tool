@@ -32,10 +32,10 @@
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
-              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">
+              <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-7">
                 ID
               </th>
-              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+              <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-7 ps-2">
                 Name
               </th>
               <th class="text-secondary opacity-7">Actions</th>
@@ -43,11 +43,11 @@
           </thead>
           <tbody>
             <tr v-for="mod in modules" :key="mod.id">
-              <td>{{ mod.id }}</td>
-              <td>{{ mod.name }}</td>
+              <td class="text-center">{{ mod.id }}</td>
+              <td class="text-center">{{ mod.name }}</td>
               <td class="align-middle">
                 <a style="cursor: pointer;" data-toggle="modal" @click="showModal(mod.id, mod.name, mod.description)"
-                  class="text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
+                  class="btn btn-sm btn-outline-primary mb-0 text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
                   <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
                 </a>
               </td>

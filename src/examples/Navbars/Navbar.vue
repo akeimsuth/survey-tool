@@ -23,6 +23,28 @@
           </div>
     </div>
     <!--End Modal-->
+        <!--Modal-->
+        <div v-if="isUpdateModalOpen" class="modal-overlay">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="userModalLabel">Update Account</h5>
+              <button @click="closeUpdateModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <form  class="modal-body" @submit.prevent="updateAccount">
+              <label>Name</label>
+              <div class="mb-3">
+                  <input type="text" name="fullname" class="form-control" placeholder="Account Name" aria-label="fullname" v-model="account_name" required>
+              </div>
+              <div class="modal-footer">
+                  <button @click="closeUpdateModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Update Account</button>
+              </div>
+          </form>
+          </div>
+    </div>
+    <!--End Modal-->
     <div class="px-3 py-1 container-fluid">
       <breadcrumbs :currentPage="currentRouteName" :textWhite="textWhite" />
       <div class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4"
@@ -33,6 +55,7 @@
               data-toggle="modal" data-target="#exampleModal" v-if="auth">
               Create account
             </button>
+            <i style="cursor: pointer;" class="fas fa-pencil-alt text-dark me-2" v-if="accountId" @click="showUpdateModal"></i>
             <select @change="selectAccount" id="account" name="account" class="form-control form-select mb-0 me-3 px-5" v-if="auth" v-model="accountId">
               <option value="0">select account</option>
               <option v-for="account in accounts" :key="account.id" :value="account.id">
@@ -69,8 +92,11 @@ export default {
       showMenu: false,
       accounts: [],
       isModalOpen: false,
+      isUpdateModalOpen: false,
       name: '',
-      accountId: 0
+      accountId: localStorage.getItem('account') || 0,
+      fullName: '',
+      account_name: ''
     };
   },
   setup(){
@@ -103,12 +129,19 @@ export default {
     logout() {
       this.$store.dispatch('logout');
       this.$router.push('/sign-in');
+      window.location.href='/sign-in';
     },
     showModal() {
         this.isModalOpen = true;
       },
       closeModal() {
         this.isModalOpen = false;
+      },
+      showUpdateModal() {
+        this.isUpdateModalOpen = true;
+      },
+      closeUpdateModal() {
+        this.isUpdateModalOpen = false;
       },
       submitForm() {
         // Handle form submission here
@@ -128,7 +161,23 @@ export default {
             console.error('Error fetching accounts:', error);
           });
       },
+      updateAccount() {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+        axios.put(`https://psb.sitebix.com/api/accounts/${this.accountId}`, {
+          data: {
+            name: this.account_name
+          }
+        })
+          .then(() => {
+            this.fetchAccounts();
+            this.closeUpdateModal();
+          })
+          .catch(error => {
+            console.error('Error updating account:', error);
+          });
+      },
       selectAccount(){
+        localStorage.setItem('account', this.accountId);
         this.$store.dispatch('assignAccount', {id: this.accountId});
       }
   },

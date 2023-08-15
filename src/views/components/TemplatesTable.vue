@@ -32,10 +32,10 @@
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
-              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">
+              <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-7">
                 ID
               </th>
-              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+              <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-7 ps-2">
                 Name
               </th>
               <th class="text-secondary opacity-7">Actions</th>
@@ -43,12 +43,12 @@
           </thead>
           <tbody>
             <tr v-for="temp in templates" :key="temp.id">
-              <td>{{ temp.id }}</td>
-              <td>{{ temp.name }}</td>
+              <td class='text-center'>{{ temp.id }}</td>
+              <td class='text-center'>{{ temp.name }}</td>
               <td class="align-middle">
                 <div class="col-4">
                   <a style="cursor: pointer;" @click="showModal(temp.id)" data-toggle="modal"
-                    class="text-secondary font-weight-bold text-xs mx-4"
+                    class="btn btn-sm btn-outline-primary mb-0 text-secondary font-weight-bold text-xs mx-4"
                     data-original-title="Edit user">
                     <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
                   </a>
@@ -59,9 +59,9 @@
                       id: temp.id
                     }
                   }">
-                  <a @click="getTemplate(temp.id)" href="#" class="text-secondary font-weight-bold text-xs"
+                  <a @click="getTemplate(temp.id)" href="#" class="btn btn-sm btn-outline-success mb-0 text-secondary font-weight-bold text-xs"
                     data-toggle="tooltip" data-original-title="Add question">
-                    <i class="ni ni-world text-dark me-2" aria-hidden="true"></i>Add Question(s)
+                    <i class="fas fa-plus text-dark me-2" aria-hidden="true"></i>Add Question(s)
                   </a>
                   </router-link>
                 </div>
