@@ -386,7 +386,7 @@ export default {
         const zip = new PizZip(templateBuffer);
 
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-        const data = await axios.get(`https://psb.sitebix.com/api/bugs`);
+        const data = await axios.get(`https://psb.sitebix.com/api/bugs?populate[survey][fields][0]=id&populate[survey][fields][1]=name&populate[bug_logs]=*`);
         // // Replace a placeholder in the template with the asset content
         console.log(data.data);
         const doc = new Docxtemplater().loadZip(zip);
