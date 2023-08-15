@@ -94,7 +94,7 @@
           <ul class="badge-text-parent" id="input_group">
             <li class="badge-text-container" name="survey">
               <span class="badge-text">{{ assignedTemp.name }}</span>
-              <span class="close-icon">&times;</span>
+              <span class="close-icon" @click="removeUserFromTemplate(assignedTemp.id, user_id)">&times;</span>
             </li>
           </ul>
         </div>
@@ -312,6 +312,20 @@ export default {
                     type: toast.TYPE.SUCCESS
             });
             this.closeSurveyModal();
+          
+        }).catch(error => console.log(error));
+      },
+      removeUserFromTemplate(id, user){
+        axios.get(`https://psb.sitebix.com/api/user-templates/${id}?populate[users][fields][0]=id`)
+        .then((response) => {
+          const users_arr = _.filter(response.data.data.users, function(x) { return x.id !== user; })
+
+            this.$store.dispatch('updateTemplate', { id: id, users: users_arr})
+            toast(`Template removed successfully!`, {
+                    autoClose: 3000,
+                    type: toast.TYPE.SUCCESS
+            });
+            this.closeModalTemplates();
           
         }).catch(error => console.log(error));
       },
