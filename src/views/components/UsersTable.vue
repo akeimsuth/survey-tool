@@ -62,7 +62,7 @@
             </li>
           </ul>
         </div>
-        <button type="button" class="btn btn-sm btn-error" @click="addAllSurveys">Add All Surveys</button><br/>
+        <button type="button" class="btn btn-sm btn-outline-warning" @click="addAllSurveys">Add All Surveys</button><br/>
         <label>Survey(s)</label>
         <div class="mb-3">
           <select class="form-control form-select" v-model="survey_id" @change="getSurvey">
