@@ -13,6 +13,7 @@ import TemplateScreen from "@/views/TemplateScreen.vue";
 import SurveyScreen from "@/views/SurveyScreen.vue";
 import AddQuestionSurvey from "@/views/AddQuestionSurvey.vue";
 import AddQuestionTemplate from "@/views/AddQuestionTemplate.vue";
+import NotFound from "@/views/NotFound.vue";
 
 const routes = [
   {
@@ -87,6 +88,11 @@ const routes = [
     path: "/template-questions/:id",
     name: "TemplateQuestions",
     component: AddQuestionTemplate,
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: NotFound,
   }
 ];
 

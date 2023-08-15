@@ -19,7 +19,7 @@ export default createStore({
     modules: null,
     assignedSurveys: null,
     assignedTemplates: null,
-    firstTime: true,
+    firstTime: null,
     module: null,
     templates: null,
     template: null,
@@ -384,7 +384,7 @@ export default createStore({
     },
     fetchSurvey({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/surveys/${id}`)
+      axios.get(`https://psb.sitebix.com/api/surveys/${id}populate[module][populate]=account`)
         .then(response => {
           commit('setSurvey',response.data.data);
         })
@@ -550,6 +550,10 @@ export default createStore({
       // Simulate a logout process here
       commit('setIsAuthenticated', false);
       commit('setUser', null);
+      commit('setAccount', null);
+      commit('setUsers', null);
+      commit('setRole', null);
+      this.replaceState({});
     },
   },
   getters: {

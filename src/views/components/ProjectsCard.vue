@@ -4,6 +4,12 @@
       <div class="row">
         <div class="col-lg-6 col-7">
           <h6>Report</h6>
+          <div>
+            <select class="form-control form-select" v-model="module_id">
+              <option value="0">--Select a module to generate report--</option>
+              <option name="survey_id" v-for="mod in modules" :key="mod.id" :value="mod.id">{{ mod.name }}</option>
+            </select>
+          </div>
         </div>
         <div class="col-lg-6 col-5 my-auto text-end">
           <div class="dropdown float-lg-end pe-4">
@@ -40,7 +46,7 @@
       </div>
     </div>
     <div class="card-body px-0 pb-2">
-      <div class="table-responsive">
+      <div v-if="module_id != '0'" class="table-responsive">
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
@@ -76,11 +82,11 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2" @click="generateDocument">Download</span>
+                  <span class="text-xs font-weight-bold mx-2" @click="generateCompletions">Download</span>
                 </div>
               </td>
             </tr>
-            <tr>
+            <!-- <tr>
               <td>
                 <div class="d-flex px-2 py-1">
                   <div class="d-flex flex-column justify-content-center">
@@ -93,10 +99,10 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2">Download</span>
+                  <span class="text-xs font-weight-bold mx-2" @click="generateDemographic">Download</span>
                 </div>
               </td>
-            </tr>
+            </tr> -->
             <tr>
               <td>
                 <div class="d-flex px-2 py-1">
@@ -111,7 +117,26 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2">Download</span>
+                  <span class="text-xs font-weight-bold mx-2" @click="generatePlatform">Download</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="d-flex px-2 py-1">
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm">Section 2 Data (Appendix N)</h6>
+                  </div>
+                </div>
+              </td>
+  
+              <td class="text-sm">
+                <span style="text-wrap: wrap;" class="text-xs font-weight-bold">Survey Section 2: Technical Problems / Other Error(s) Encountered
+NOTE: This report only generates issues that have been addressed.</span>
+              </td>
+              <td class="align-middle">
+                <div class="d-flex align-items-center justify-content-center">
+                  <span class="text-xs font-weight-bold mx-2" @click="generateBugs">Download</span>
                 </div>
               </td>
             </tr>
@@ -148,10 +173,12 @@ import img21 from "../../assets/img/team-4.jpg";
 // import test_doc from "../../assets/templates/test_doc.zip";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
-import PizZipUtils from "pizzip/utils/index.js";
 import { saveAs } from "file-saver";
-import fs from 'file-system';
-
+import axios from "axios";
+import _ from 'lodash';
+import moment from "moment";
+import { computed } from 'vue';
+import { useStore } from "vuex";
 export default {
   name: "projects-card",
   data() {
@@ -177,7 +204,7 @@ export default {
       img19,
       img20,
       img21,
-
+      module_id: 0,
       state: {
         name: 'San Luis Potosi',
         map: 'data:image/png;base64',
@@ -199,77 +226,185 @@ export default {
   mounted() {
     setTooltip();
   },
-  methods: {
-    loadFile(url, callback) {
-    PizZipUtils.getBinaryContent(url, callback);
+  setup() {
+    const store = useStore();
+
+    let modules = computed(function () {
+      return store.getters.getModules
+    });
+
+
+    return {
+      modules
+    }
   },
-  renderDoc() {
-      this.loadFile("https://drive.google.com/uc?export=download&id=1zDso0rb2b5gsa7a3pKUYH56BT_LblnG0Lq2EAYyPgqc", function(
-        error,
-        content
-      ) {
-        if (error) {
-          throw error;
-        }
-        console.log(content);
-        const zip = new PizZip(content);
-        const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
-        doc.setData({
-          first_name: "John",
-          last_name: "Doe",
-          phone: "0652455478",
-          description: "New Website"
-        });
-        try {
-          // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
-          doc.render();
-        } catch (error) {
-          // The error thrown here contains additional information when logged with JSON.stringify (it contains a properties object containing all suberrors).
+  methods: {
+    async generateCompletions() {
+      try {
+        const templatePath = "/files/survey_completions.docx"; // Path to your docx template
 
-          console.log(JSON.stringify({ error: error }));
+        // Load the template
+        const response = await fetch(templatePath);
+        const templateBuffer = await response.arrayBuffer();
+        console.log(templateBuffer);
+        const zip = new PizZip(templateBuffer);
 
-          if (error.properties && error.properties.errors instanceof Array) {
-            const errorMessages = error.properties.errors
-              .map(function(error) {
-                return error.properties.explanation;
-              })
-              .join("\n");
-            console.log("errorMessages", errorMessages);
-            // errorMessages is a humanly readable message looking like this :
-            // 'The tag beginning with "foobar" is unopened'
-          }
-          throw error;
-        }
-        const out = doc.getZip().generate({
-          type: "blob",
-          mimeType:
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        });
-        // Output the document using Data-URI
-        saveAs(out, "output.docx");
-      });
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+        const data = await axios.get(`https://psb.sitebix.com/api/submissions?filters[survey][module][id][$eq]=${this.module_id}&populate[survey][populate][module]=id&populate=user`);
+        const account = await axios.get(`https://psb.sitebix.com/api/accounts/${this.$store.state.accountId}`);
+        // // Replace a placeholder in the template with the asset content
+        console.log(data.data);
+        const doc = new Docxtemplater().loadZip(zip);
+        const arr = _.uniqBy(data.data.data, 'feedback');
+        console.log('ARR: ', arr);
+        //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
+        doc.setData({data: arr, account_name: account.data.data.name, 
+          day: moment(new Date()).format('dddd'),
+          date: moment(new Date()).format("MMMM Do, YYYY"),
+        time: moment().format('LT')});
+        doc.render();
+        const generatedContent = doc.getZip().generate({
+            type: "blob",
+            mimeType:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          });
+        saveAs(generatedContent, `survey_completions-${Date.now()}.docx`);
+
+        console.log('Document generated successfully.');
+      } catch (error) {
+        console.log('ERROR: ', error);
+      }
+
     },
-    async generateDocument() {
-      const templatePath = "../../assets/templates/test_doc.docx"; // Path to your docx template
+    async generateDemographic() {
+      try {
+        const templatePath = "/files/Table 3-2-A.docx"; // Path to your docx template
 
-      // Load the template
-      const templateContent = fs.readFileSync(templatePath, 'binary');
-      const zip = new PizZip(templateContent);
+        // Load the template
+        const response = await fetch(templatePath);
+        const templateBuffer = await response.arrayBuffer();
+        console.log(templateBuffer);
+        const zip = new PizZip(templateBuffer);
 
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+        const data = await axios.get('https://psb.sitebix.com/api/user-submissions?populate[user_question][populate][user_template][fields][0]=id&populate[user_question][fields][0]=question&populate[user_answers][fields][0]=answer&populate[user][fields][1]=username');
+        const account = await axios.get(`https://psb.sitebix.com/api/accounts/${this.$store.state.accountId}`);
+        // // Replace a placeholder in the template with the asset content
+        console.log(data.data);
+        const doc = new Docxtemplater().loadZip(zip);
+        const arr = _.groupBy(data.data.data, user => user.user.id);
+       // const answers = _.map(data.data.data, 'user_answers');
 
-      // Replace a placeholder in the template with the asset content
-      const doc = new Docxtemplater().loadZip(zip);
-      doc.setData({}); // Your data for the template
-      doc.render();
-      const generatedContent = doc.getZip().generate({
-          type: "blob",
-          mimeType:
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        });
-      saveAs(generatedContent, "output.docx");
-      // Save the generated document to a file
-      //fs.writeFileSync(outputFilePath, generatedContent);
-      console.log('Document generated successfully.');
+        console.log('ARR: ', arr);
+        //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
+        doc.setData({data: Object.values(arr), template: account.data.data.name});
+        doc.render();
+        // const generatedContent = doc.getZip().generate({
+        //     type: "blob",
+        //     mimeType:
+        //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        //   });
+        // saveAs(generatedContent, `Table_3_2_A-${Date.now()}.docx`);
+
+        console.log('Document generated successfully.');
+      } catch (error) {
+        console.log('ERROR: ', error);
+      }
+
+    },
+    async generatePlatform() {
+      try {
+        const templatePath = "/files/Table 3-2-C.docx"; // Path to your docx template
+
+        // Load the template
+        const response = await fetch(templatePath);
+        const templateBuffer = await response.arrayBuffer();
+        console.log(templateBuffer);
+        const zip = new PizZip(templateBuffer);
+
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+        const data = await axios.get(`https://psb.sitebix.com/api/submissions?populate=user`);
+        // // Replace a placeholder in the template with the asset content
+        console.log(data.data);
+        const doc = new Docxtemplater().loadZip(zip);
+        const arr = _.uniqBy(data.data.data, 'feedback');
+        const browsers = _.uniq(_.map(data.data.data, 'deviceBrowser'));
+        console.log('ARR: ', arr);
+        //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
+        doc.setData({data: arr, browsers: browsers, 
+          percent_pc: 0,
+          percent_mac: 0,
+          percent_ios: 0,
+          percent_android: 0,
+          mobile_ios: 0,
+          tablet_ios: 0,
+          mobile_android: 0,
+          tablet_android: 0,
+          pc_ie: 0,
+          pc_me: 0,
+          pc_gc: 0,
+          pc_mf: 0,
+          pc_other: 0,
+          mac_gc: 0,
+          mac_mf: 0,
+          mac_safari: 0,
+          mac_other: 0,
+          ios_me: 0,
+          ios_gc: 0,
+          ios_mf: 0,
+          ios_safari: 0,
+          ios_other: 0,
+          android_me: 0,
+          android_gc: 0,
+          android_mf: 0,
+          android_other: 0,
+          day: moment(new Date()).format('dddd'),
+          date: moment(new Date()).format("MMMM Do, YYYY"),
+        time: moment().format('LT')});
+        doc.render();
+        const generatedContent = doc.getZip().generate({
+            type: "blob",
+            mimeType:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          });
+        saveAs(generatedContent, `survey_completions-${Date.now()}.docx`);
+
+        console.log('Document generated successfully.');
+      } catch (error) {
+        console.log('ERROR: ', error);
+      }
+
+    },
+    async generateBugs() {
+      try {
+        const templatePath = "/files/bugs.docx"; // Path to your docx template
+
+        // Load the template
+        const response = await fetch(templatePath);
+        const templateBuffer = await response.arrayBuffer();
+        console.log(templateBuffer);
+        const zip = new PizZip(templateBuffer);
+
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+        const data = await axios.get(`https://psb.sitebix.com/api/bugs`);
+        // // Replace a placeholder in the template with the asset content
+        console.log(data.data);
+        const doc = new Docxtemplater().loadZip(zip);
+        //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
+        doc.setData({data: data.data.data});
+        doc.render();
+        const generatedContent = doc.getZip().generate({
+            type: "blob",
+            mimeType:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          });
+        saveAs(generatedContent, `technical_issues-${Date.now()}.docx`);
+
+        console.log('Document generated successfully.');
+      } catch (error) {
+        console.log('ERROR: ', error);
+      }
+
     },
   }
 };

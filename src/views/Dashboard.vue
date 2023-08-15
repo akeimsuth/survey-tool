@@ -67,68 +67,6 @@
         <projects-card />
       </div>
     </div>
-    <div class="mt-4 row">
-      <div class="mb-4 col-lg-5 mb-lg-0">
-        <div class="card z-index-2">
-          <div class="p-3 card-body">
-            <reports-bar-chart
-              id="chart-bar"
-              title="active Users"
-              description="(<strong>+23%</strong>) than last week"
-              :chart="{
-                labels: [
-                  'Apr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Aug',
-                  'Sep',
-                  'Oct',
-                  'Nov',
-                  'Dec',
-                ],
-                datasets: {
-                  label: 'Sales',
-                  data: [450, 200, 100, 220, 500, 100, 400, 230, 500],
-                },
-              }"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-7">
-        <!-- line chart -->
-        <div class="card z-index-2">
-          <gradient-line-chart
-            id="chart-line"
-            title="Report Line Chart"
-            :chart="{
-              labels: [
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
-              ],
-              datasets: [
-                {
-                  label: 'Mobile Apps',
-                  data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-                },
-                {
-                  label: 'Websites',
-                  data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
-                },
-              ],
-            }"
-          />
-        </div>
-      </div>
-    </div>
 
   </div>
   <div class="py-4 container-fluid" v-else>
@@ -140,8 +78,6 @@
 </template>
 <script>
 import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";
-import ReportsBarChart from "@/examples/Charts/ReportsBarChart.vue";
-import GradientLineChart from "@/examples/Charts/GradientLineChart.vue";
 import ProjectsCard from "./components/ProjectsCard.vue";
 import US from "../assets/img/icons/flags/US.png";
 import DE from "../assets/img/icons/flags/DE.png";
@@ -202,8 +138,6 @@ export default {
   },
   components: {
     MiniStatisticsCard,
-    ReportsBarChart,
-    GradientLineChart,
     ProjectsCard,
   },
   setup(){

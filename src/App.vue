@@ -16,7 +16,7 @@
       :class="[navClasses]"
       :textWhite="this.$store.state.isAbsolute ? 'text-white opacity-8' : ''"
       :minNav="navbarMinimize"
-      v-if="this.$store.state.isAuthenticated"
+      v-if="this.$store.state.role == 'auth_admin' || this.$store.state.role == 'authenticated'"
     />
     <router-view />
     <app-footer v-show="this.$store.state.showFooter" />

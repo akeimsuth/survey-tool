@@ -147,6 +147,7 @@ export default {
       console.log('Submitted Questions and Answers:', questions.value);
       toast("Questions and Answers Submitted!", {
         autoClose: 3000,
+        type: toast.TYPE.SUCCESS
       });
     };
 

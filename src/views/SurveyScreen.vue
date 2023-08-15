@@ -213,8 +213,8 @@ export default {
               "answers": data[index].answer,
               "user": this.$store.getters.getUser.data.user.id,
               "survey": this.survey.id,
-              "devicePlatform": detectBrowser(),
-              "deviceBrowser": window.navigator.userAgentData.platform,
+              "devicePlatform": window.navigator.userAgentData.platform,
+              "deviceBrowser": detectBrowser(),
               "feedback": this.feedback
             }
           }).then(() => {

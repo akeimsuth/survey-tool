@@ -4,49 +4,49 @@
     id="sidenav-collapse-main"
   >
     <ul class="navbar-nav">
-      <li class="nav-item" v-if="auth">
+      <li class="nav-item" v-if="auth === 'auth_admin'">
         <sidenav-collapse navText="Dashboard" :to="{ name: 'Dashboard' }">
           <template #icon>
             <shop />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item" v-if="!auth">
+      <li class="nav-item" v-if="auth === 'authenticated'">
         <sidenav-collapse navText="My Surveys" :to="{ name: 'MySurveys' }">
           <template #icon>
             <shop />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item" v-if="auth">
+      <li class="nav-item" v-if="auth === 'auth_admin'">
         <sidenav-collapse navText="Users" :to="{ name: 'Users' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item" v-if="auth">
+      <li class="nav-item" v-if="auth === 'auth_admin'">
         <sidenav-collapse navText="Modules" :to="{ name: 'Modules' }">
           <template #icon>
             <credit-card />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item" v-if="auth">
+      <li class="nav-item" v-if="auth === 'auth_admin'">
         <sidenav-collapse navText="Surveys" :to="{ name: 'Surveys' }">
           <template #icon>
             <credit-card />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item" v-if="auth">
+      <li class="nav-item" v-if="auth === 'auth_admin'">
         <sidenav-collapse navText="Templates" :to="{ name: 'Templates' }">
           <template #icon>
             <shop />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item" v-if="auth">
+      <li class="nav-item" v-if="auth === 'auth_admin'">
         <sidenav-collapse navText="BugReports" :to="{ name: 'BugReports' }">
           <template #icon>
             <credit-card />
@@ -79,7 +79,7 @@
         </h6>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Profile" :to="{ name: 'Profile' }">
+        <sidenav-collapse navText="Profile" v-if="auth" :to="{ name: 'Profile' }">
           <template #icon>
             <customer-support />
           </template>
@@ -125,7 +125,7 @@ export default {
     const store = useStore();
 
     let auth = computed(function () {
-      return store.getters.getUser?.data?.user?.id == 1
+      return store.getters.getRole
     });
 
 
