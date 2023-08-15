@@ -7,7 +7,7 @@
           <div>
             <select class="form-control form-select" v-model="module_id">
               <option value="0">--Select a module to generate report--</option>
-              <option name="survey_id" v-for="mod in modules" :key="mod.id" :value="mod.id">{{ mod.name }}</option>
+              <option name="survey_id" v-for="mod in modules" :key="mod.id" :value="mod">{{ mod.name }}</option>
             </select>
           </div>
         </div>
@@ -51,17 +51,17 @@
           <thead>
             <tr>
               <th
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
               >
                 Report Table or Section
               </th>
               <th
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2"
               >
                 Description
               </th>
               <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
               >
                 Generate Report
               </th>
@@ -179,6 +179,7 @@ import _ from 'lodash';
 import moment from "moment";
 import { computed } from 'vue';
 import { useStore } from "vuex";
+import { Document, Packer, Paragraph, Table, TableCell, TableRow, HeadingLevel, WidthType, ShadingType, AlignmentType, } from "@contractmill/docx";
 export default {
   name: "projects-card",
   data() {
@@ -240,40 +241,157 @@ export default {
   },
   methods: {
     async generateCompletions() {
-      try {
-        const templatePath = "/files/survey_completions.docx"; // Path to your docx template
-
-        // Load the template
-        const response = await fetch(templatePath);
-        const templateBuffer = await response.arrayBuffer();
-        console.log(templateBuffer);
-        const zip = new PizZip(templateBuffer);
-
-        axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-        const data = await axios.get(`https://psb.sitebix.com/api/submissions?filters[survey][module][id][$eq]=${this.module_id}&populate[survey][populate][module]=id&populate=user`);
-        const account = await axios.get(`https://psb.sitebix.com/api/accounts/${this.$store.state.accountId}`);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+        const data = await axios.get(`https://psb.sitebix.com/api/submissions?filters[survey][module][id][$eq]=${this.module_id.id}&populate[survey][populate][module]=id&populate=user`);
+        // const account = await axios.get(`https://psb.sitebix.com/api/accounts/${this.$store.state.accountId}`);
         // // Replace a placeholder in the template with the asset content
-        console.log(data.data);
-        const doc = new Docxtemplater().loadZip(zip);
         const arr = _.uniqBy(data.data.data, 'feedback');
         console.log('ARR: ', arr);
         //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
-        doc.setData({data: arr, account_name: account.data.data.name, 
-          day: moment(new Date()).format('dddd'),
-          date: moment(new Date()).format("MMMM Do, YYYY"),
-        time: moment().format('LT')});
-        doc.render();
-        const generatedContent = doc.getZip().generate({
-            type: "blob",
-            mimeType:
-              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          });
-        saveAs(generatedContent, `survey_completions-${Date.now()}.docx`);
+        // doc.setData({data: arr, account_name: account.data.data.name,
+        //   day: moment(new Date()).format('dddd'),
+        //   date: moment(new Date()).format("MMMM Do, YYYY"),
+        // time: moment().format('LT')});
 
-        console.log('Document generated successfully.');
-      } catch (error) {
-        console.log('ERROR: ', error);
-      }
+
+      const title = new Paragraph({
+          text: "Report: Surveys Completed",
+          heading: HeadingLevel.HEADING_1,
+          alignment: AlignmentType.CENTER
+      });
+
+      // Title Row
+      const titleRow = [
+        new TableRow({
+            tableHeader: true,
+            children: [
+                new TableCell({
+                    children: [new Paragraph({
+                      text: this.module_id.name,
+                      alignment: AlignmentType.CENTER
+                    })],
+                    columnSpan: 3
+                })
+            ],
+        })
+      ];
+      // Header Row
+      const headerRow = [
+        new TableRow({
+            shading: {
+              color: "blue"
+            },
+            tableHeader: true,
+            children: [
+                new TableCell({
+                    children: [new Paragraph('USER')],
+                    shading: {
+                      fill: "auto",
+                      type: ShadingType.SOLID,
+                      color: "f2f2f2",
+                    },
+                }),
+                new TableCell({
+                    children: [new Paragraph('SURVEY')],
+                    shading: {
+                        fill: "auto",
+                        type: ShadingType.SOLID,
+                        color: "f2f2f2",
+                    },
+                }),
+                new TableCell({
+                    children: [new Paragraph('COMPLETED DATE')],
+                    shading: {
+                        fill: "auto",
+                        type: ShadingType.SOLID,
+                        color: "f2f2f2",
+                    },
+                }),
+            ],
+        }),
+      ];
+      // DATA Row
+      const infoArr = [];
+
+      arr.forEach(item => {
+        let row = new TableRow({
+                  children: [
+                      new TableCell({
+                          children: [new Paragraph(item.user.username)],
+                      }),
+                      new TableCell({
+                          children: [new Paragraph(item.survey.name)],
+                      }),
+                      new TableCell({
+                          children: [new Paragraph(new Date(item.createdAt).toDateString())],
+                      }),
+                  ],
+              });
+              infoArr.push(row)
+      });
+
+      const allRows = [];
+      allRows.push(...titleRow, ...headerRow, ...infoArr);
+
+      const table = new Table({
+          rows: allRows,
+          width: {
+              size: 100,
+              type: WidthType.PERCENTAGE,
+          },
+          alignment: AlignmentType.CENTER,
+      });
+
+      const doc = new Document({
+          sections: [
+              {
+                  children: [
+                      title,
+                      table,
+                  ],
+              },
+          ],
+      });
+
+      Packer.toBlob(doc).then((blob) => {
+          // saveAs from FileSaver will download the file
+          saveAs(blob, "example.docx");
+      });
+
+      // try {
+      //   const templatePath = "/files/survey_completions.docx"; // Path to your docx template
+
+      //   // Load the template
+      //   const response = await fetch(templatePath);
+      //   const templateBuffer = await response.arrayBuffer();
+      //   console.log(templateBuffer);
+      //   const zip = new PizZip(templateBuffer);
+
+      //   axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+      //   const data = await axios.get(`https://psb.sitebix.com/api/submissions?filters[survey][module][id][$eq]=${this.module_id}&populate[survey][populate][module]=id&populate=user`);
+      //   const account = await axios.get(`https://psb.sitebix.com/api/accounts/${this.$store.state.accountId}`);
+      //   // // Replace a placeholder in the template with the asset content
+      //   console.log(data.data);
+      //   const doc = new Docxtemplater().loadZip(zip);
+      //   const arr = _.uniqBy(data.data.data, 'feedback');
+      //   console.log('ARR: ', arr);
+      //   //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
+      //   doc.setData({data: arr, account_name: account.data.data.name,
+      //     day: moment(new Date()).format('dddd'),
+      //     date: moment(new Date()).format("MMMM Do, YYYY"),
+      //   time: moment().format('LT')});
+      //   doc.render();
+      //   const generatedContent = doc.getZip().generate({
+      //       type: "blob",
+      //       mimeType:
+      //         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      //     });
+      //   saveAs(generatedContent, `survey_completions-${Date.now()}.docx`);
+
+      //   console.log('Document generated successfully.');
+      // } catch (error) {
+      //   console.log('ERROR: ', error);
+      // }
 
     },
     async generateDemographic() {
