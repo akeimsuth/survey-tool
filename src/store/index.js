@@ -84,6 +84,13 @@ export default createStore({
     toggleHideConfig(state) {
       state.hideConfigButton = !state.hideConfigButton;
     },
+    reset(state){
+        state.hideConfigButton = false,
+        state.isAuthenticated = false,
+        state.accountId = null,
+        state.role = null,
+        state.user = null
+    },
     setIsAuthenticated(state, value) {
       state.isAuthenticated = value;
     },
@@ -158,15 +165,18 @@ export default createStore({
     setCardBackground({ commit }, payload) {
       commit("cardBackground", payload);
     },
+    assignSurveys({ dispatch }, id){
+      dispatch('fetchSurveys', id);
+    },
     assignAccount({ commit, dispatch }, { id }){
       commit('setAccount', id);
-      dispatch('fetchSurveys');
+      dispatch('fetchSurveys', 0);
       dispatch('fetchModules');
       dispatch('fetchTemplates');
       dispatch('getDashboardCount');
       dispatch('fetchUsers');
       dispatch('fetchAssignedSurveys', this.state.user.data.user.id);
-      dispatch('fetchAssignedTemplates');
+      dispatch('fetchAssignedTemplates', this.state.user.data.user.id);
     },
     async login({ commit, dispatch }, { email, password}){
       try {
@@ -179,7 +189,7 @@ export default createStore({
         commit('setUser', data);
         if(data){
           await dispatch('getRole');
-          await dispatch('fetchAssignedTemplates');
+          //await dispatch('fetchAssignedTemplates', this.state.user.data.user.id);
         }
         console.log('SUCCESS!!');
         return this.state.role;
@@ -269,16 +279,27 @@ export default createStore({
           console.error('Error fetching users:', error);
         });
     },
-    fetchSurveys({ commit }) {
+    fetchSurveys({ commit }, id) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/surveys?filters[module][account][id][$eq]=${this.state.accountId}`)
-        .then(response => {
-          commit('setSurveys',response.data.data);
-        })
-        .catch(error => {
-          console.error('Error fetching users:', error);
-        });
+      if( id != 0 ){
+        axios.get(`https://psb.sitebix.com/api/surveys?filters[module][id][$eq]=${id}`)
+          .then(response => {
+            commit('setSurveys',response.data.data);
+          })
+          .catch(error => {
+            console.error('Error fetching users:', error);
+          });
+      } else {
+
+        axios.get(`https://psb.sitebix.com/api/surveys?filters[module][account][id][$eq]=${this.state.accountId}`)
+          .then(response => {
+            commit('setSurveys',response.data.data);
+          })
+          .catch(error => {
+            console.error('Error fetching users:', error);
+          });
+      }
     },
     fetchUserSurveys({ commit, dispatch }) {
       console.log('TOKEN: ',this.state.user.data.jwt)
@@ -329,14 +350,16 @@ export default createStore({
           console.error('Error fetching users:', error);
         });
     },
-    fetchAssignedTemplates({ commit, dispatch }) {
+    fetchAssignedTemplates({ commit, dispatch }, {id}) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/users/${this.state.user.data.user.id}?populate=user_template`)
+      axios.get(`https://psb.sitebix.com/api/users/${id}?populate=user_template`)
         .then(async(response) => {
           console.log('TOP: ', response.data);
           commit('setAssignedTemplates',response.data.user_template);
-          await dispatch('checkIfFirstTime');
+          if(this.state.role == 'authenticated'){
+            await dispatch('checkIfFirstTime');
+          }
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -431,7 +454,7 @@ export default createStore({
         }
       })
         .then(() => {
-          dispatch('fetchSurveys');
+          dispatch('fetchSurveys', 0);
         })
         .catch(error => {
           console.error('Error fetching users:', error);
@@ -519,7 +542,7 @@ export default createStore({
       })
         .then(response => {
           console.log(response);
-          dispatch('fetchSurveys');
+          dispatch('fetchSurveys', 0);
         })
         .catch(error => {
           console.error('Error fetching templates:', error);
@@ -548,12 +571,7 @@ export default createStore({
     },
     logout({ commit }) {
       // Simulate a logout process here
-      commit('setIsAuthenticated', false);
-      commit('setUser', null);
-      commit('setAccount', null);
-      commit('setUsers', null);
-      commit('setRole', null);
-      this.replaceState({});
+      commit('reset');
     },
   },
   getters: {

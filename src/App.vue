@@ -5,7 +5,7 @@
       this.$store.state.isTransparent,
       this.$store.state.isRTL ? 'fixed-end' : 'fixed-start',
     ]"
-    v-if="this.$store.state.showSidenav"
+    v-if="this.$store.state.role == 'auth_admin' || this.$store.state.role == 'authenticated'"
   />
   <main
     class="main-content position-relative max-height-vh-100 h-100 border-radius-lg"

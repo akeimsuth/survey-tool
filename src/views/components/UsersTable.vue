@@ -48,17 +48,21 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="userModalLabel">Assign User</h5>
-        <button @click="closeModall" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button @click="closeSurveyModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <form class="modal-body">
-        <div v-if="assigned">
-          <label>Assigned Surveys</label>
-          <ul id="input_group" v-for="assign in assigned" :key="assign.id">
-            <li name="survey">{{ assign.name }}<a class="px-2 mx-2 del-survey">Remove</a></li>
+        <label>Assigned Surveys</label>
+        <div v-if="assigned != null" style="display:flex; flex-wrap: wrap;">
+          <ul class="badge-text-parent" id="input_group" v-for="assign in assigned" :key="assign.id">
+            <li class="badge-text-container" name="survey">
+              <span class="badge-text">{{ assign.name }}</span>
+              <span class="close-icon" @click="removeUserFromSurvey(assign.id, user_id)">&times;</span>
+            </li>
           </ul>
         </div>
+        <button type="button" class="btn btn-sm btn-error" @click="addAllSurveys">Add All Surveys</button><br/>
         <label>Survey(s)</label>
         <div class="mb-3">
           <select class="form-control form-select" v-model="survey_id" @change="getSurvey">
@@ -68,8 +72,8 @@
         </div>
 
         <div class="modal-footer">
-          <button @click="closeModall" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button @click="submitFormm" type="button" class="btn btn-primary">Save changes</button>
+          <button @click="closeSurveyModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button @click="submitSurveyForm" type="button" class="btn btn-primary">Save changes</button>
         </div>
       </form>
     </div>
@@ -85,10 +89,13 @@
         </button>
       </div>
       <form class="modal-body">
-        <div v-if="assigned">
+        <div v-if="assignedTemp">
           <label>Assigned Template</label>
-          <ul id="input_group">
-            <li name="survey">{{ assignedTemp.name }}<a class="px-2 mx-2 del-survey">Remove</a></li>
+          <ul class="badge-text-parent" id="input_group">
+            <li class="badge-text-container" name="survey">
+              <span class="badge-text">{{ assignedTemp.name }}</span>
+              <span class="close-icon">&times;</span>
+            </li>
           </ul>
         </div>
         <label>Template(s)</label>
@@ -131,17 +138,17 @@
               <td class='text-center'>{{ use.role.name }}</td>
               <td class="align-middle">
                 <div class="col-4">
-                  <a style="cursor: pointer;" @click="showModal(use.id, use.username, use.email)" data-toggle="modal" class="text-secondary font-weight-bold text-xs mx-4"
+                  <a style="cursor: pointer;" @click="showModal(use.id, use.username, use.email)" data-toggle="modal" class="btn btn-sm btn-outline-primary mb-0 text-secondary font-weight-bold text-xs mx-4"
                     data-original-title="Edit user">
                     <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
                   </a>
-                  <a style="cursor: pointer;" @click="showModall(use.id)" v-show="use.role.type === 'authenticated'" data-toggle="modal"
-                    class="text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
-                    <i class="fas fa-plus-alt text-dark me-2" aria-hidden="true"></i>Assign Survey
+                  <a style="cursor: pointer;" @click="showSurveyModal(use.id)" v-show="use.role.type === 'authenticated'" data-toggle="modal"
+                    class="btn btn-sm btn-outline-warning mb-0 text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
+                    <i class="fas fa-plus text-dark me-2" aria-hidden="true"></i>Assign Survey
                   </a>
                   <a style="cursor: pointer;" @click="showTemplateModal(use.id)" v-show="use.role.type === 'authenticated'" data-toggle="modal"
-                    class="text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
-                    <i class="fas fa-plus-alt text-dark me-2" aria-hidden="true"></i>Assign Template
+                    class="btn btn-sm btn-outline-success mb-0 text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
+                    <i class="fas fa-plus text-dark me-2" aria-hidden="true"></i>Assign Template
                   </a>
                 </div>
               </td>
@@ -160,6 +167,8 @@ import { computed } from 'vue';
 import { useStore } from "vuex";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import _ from "lodash";
+import axios from 'axios';
 export default {
   name: "users-table",
   components: {
@@ -227,7 +236,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('fetchSurveys');
+    this.$store.dispatch('fetchSurveys', null);
   },
   methods: {
     showModal(id, username, email) {
@@ -236,7 +245,7 @@ export default {
       this.email = email;
       this.isModalOpen = true;
     },
-    showModall(id) {
+    showSurveyModal(id) {
         this.user_id = id;
         this.$store.dispatch('fetchAssignedSurveys', { id: id});
         //this.$store.dispatch('fetchAssignedSurveys', { id: id});
@@ -262,7 +271,7 @@ export default {
       getTemplate(){
         this.$store.dispatch('fetchTemplate', { id: this.template_id});
       },
-      closeModall() {
+      closeSurveyModal() {
         this.issModalOpen = false;
       },
       submitForm() {
@@ -275,11 +284,54 @@ export default {
         });
         this.closeModal();
       },
-      submitFormm() {
+      async submitSurveyForm() {
         // Handle form submission here
         // For demonstration, we'll just log the user input
-        this.$store.dispatch('updateSurvey', { id: this.survey_id, name: this.surve.name, description: this.surve.description, users: this.user_id})
-        toast(`User Assigned to Survey ${this.surve.name}!`, {
+        axios.get(`https://psb.sitebix.com/api/surveys/${this.survey_id}?populate[users][fields][0]=id`)
+        .then((response) => {
+          const users_arr = _.map(response.data.data.users, 'id');
+          if(!users_arr.includes(this.user_id)){
+            users_arr.push(this.user_id);
+            this.$store.dispatch('updateSurvey', { id: this.survey_id, name: this.surve.name, description: this.surve.description, users: users_arr})
+            toast(`User Assigned to Survey ${this.surve.name}!`, {
+                    autoClose: 3000,
+                    type: toast.TYPE.SUCCESS
+            });
+            this.closeSurveyModal();
+          }
+        }).catch(error => console.log(error));
+      },
+      removeUserFromSurvey(id, user){
+        axios.get(`https://psb.sitebix.com/api/surveys/${id}?populate[users][fields][0]=id`)
+        .then((response) => {
+          const users_arr = _.filter(response.data.data.users, function(x) { return x.id !== user; })
+
+            this.$store.dispatch('updateSurvey', { id: id, users: users_arr})
+            toast(`Survey removed successfully!`, {
+                    autoClose: 3000,
+                    type: toast.TYPE.SUCCESS
+            });
+            this.closeSurveyModal();
+          
+        }).catch(error => console.log(error));
+      },
+      addAllSurveys(){
+        console.log('SUR: ', this.surveys);
+        this.surveys.map((survey) => {
+          if(_.find(this.assigned, survey.id)){
+            console.log('found');
+          } else{
+            axios.get(`https://psb.sitebix.com/api/surveys/${survey.id}?populate[users][fields][0]=id`)
+        .then((response) => {
+          const users_arr = _.map(response.data.data.users, 'id');
+          if(!users_arr.includes(this.user_id)){
+            users_arr.push(this.user_id);
+            this.$store.dispatch('updateSurvey', { id: survey.id, name: survey.name, description: survey.description, users: users_arr})
+          }
+        }).catch(error => console.log(error));
+          }
+        })
+        toast(`All Surveys added to user!`, {
                 autoClose: 3000,
                 type: toast.TYPE.SUCCESS
         });
@@ -320,4 +372,27 @@ export default {
   border-radius: 0.2rem;
   cursor: pointer;
 }
+.badge-text-parent {
+      list-style: none;
+      display: flex;
+      padding: 3px;
+    }
+
+    .badge-text-container {
+      display: flex;
+      align-items: center;
+      padding: 0px 5px;
+      background-color: #e0e0e0;
+      border-radius: 20px;
+    }
+
+    .badge-text {
+      margin-right: 5px;
+      font-size: 0.6rem;
+      font-weight: bold;
+    }
+
+    .close-icon {
+      cursor: pointer;
+    }
 </style>

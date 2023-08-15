@@ -36,15 +36,22 @@
     <div class="card-header pb-0">
       <h6>Surveys table</h6>
     </div>
+    <div style="display: flex; align-items: center; justify-content: baseline;" class="col-lg-6 col-7">
+      <span style="font-size:0.8em; font-weight: 600; text-wrap: nowrap" class="mx-3">Filter By Module: </span>
+      <select class="form-control form-select" v-model="module_id" @change="saveLastModule">
+        <option value="0">--Select a module --</option>
+        <option name="survey_id" v-for="mod in modules" :key="mod.id" :value="mod.id">{{ mod.name }}</option>
+      </select>
+    </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+              <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-7">
                 ID
               </th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+              <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-7 ps-2">
                 Name
               </th>
               <th class="text-secondary opacity-7">Actions</th>
@@ -52,12 +59,12 @@
           </thead>
           <tbody>
             <tr v-for="survey in surveys" :key="survey.id">
-              <td>{{ survey.id }}</td>
-              <td>{{ survey.name }}</td>
+              <td class='text-center'>{{ survey.id }}</td>
+              <td class='text-center'>{{ survey.name }}</td>
               <td class="align-middle">
                 <div class="col-4">
                   <a style="cursor: pointer;" data-toggle="modal" @click="showModal(survey.id, survey.name, survey.description)"
-                    class="text-secondary font-weight-bold text-xs mx-4" data-original-title="Edit user">
+                    class="btn btn-sm btn-outline-primary text-secondary font-weight-bold text-xs mx-4 mb-0" data-original-title="Edit user">
                     <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
                   </a>
                   <router-link
@@ -67,9 +74,9 @@
                       id: survey.id
                     }
                   }">
-                  <a class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"
+                  <a class="btn btn-sm btn-outline-success mb-0 text-secondary font-weight-bold text-xs" data-toggle="tooltip"
                     data-original-title="Add question">
-                    <i class="ni ni-world text-dark me-2" aria-hidden="true"></i>Add Question(s)
+                    <i class="fas fa-plus text-dark me-2" aria-hidden="true"></i>Add Question(s)
                   </a>
                   </router-link>
                 </div>
@@ -100,7 +107,8 @@ export default {
       name: '',
       mod: '',
       id: null,
-      description: ''
+      description: '',
+      module_id: localStorage.getItem('mod') || '0'
     };
   },
   setup(){
@@ -113,10 +121,18 @@ export default {
     let survey = computed(function () {
       return store.getters.getSurvey
     });
+
+    let modules = computed(function () {
+      return store.getters.getModules
+    });
     return {
       surveys,
+      modules,
       survey
     }
+  },
+  mounted(){
+    this.$store.dispatch('assignSurveys', this.module_id);
   },
   methods: {
     showModal(id, name, desc) {
@@ -125,12 +141,17 @@ export default {
       this.description = desc;
       this.isModalOpen = true;
       },
+
       closeModal() {
         this.isModalOpen = false;
       },
       getSurvey(id){
         // this.$store.dispatch('fetchQuestions', { id: id});
         this.$store.dispatch('fetchSurvey', { id: id});
+      },
+      saveLastModule(){
+        localStorage.setItem('mod', this.module_id);
+        this.$store.dispatch('assignSurveys', this.module_id);
       },
       submitForm() {
         // Handle form submission here
