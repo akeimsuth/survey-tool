@@ -565,22 +565,23 @@ export default {
         heading: HeadingLevel.HEADING_1,
         alignment: AlignmentType.CENTER
       });
-
+      const titleArr = []
       // Title Row
-      // const titleRow = [
-      //   new TableRow({
-      //     tableHeader: true,
-      //     children: [
-      //       new TableCell({
-      //         children: [new Paragraph({
-      //           text: this.module_id.name,
-      //           alignment: AlignmentType.CENTER
-      //         })],
-      //         columnSpan: 3
-      //       })
-      //     ],
-      //   })
-      // ];
+      arr.forEach(items => {
+        let row = new TableRow({
+          tableHeader: true,
+          children: [
+            new TableCell({
+              children: [new Paragraph({
+                text: items.description,
+                alignment: AlignmentType.CENTER
+              })],
+              columnSpan: 3
+            })
+          ],
+        })
+        titleArr.push(row);
+      })
       // Header Row
       const headerRow = [
         new TableRow({
@@ -639,7 +640,7 @@ export default {
       });
 
       const allRows = [];
-      allRows.push(...headerRow, ...infoArr);
+      allRows.push(...titleArr,...headerRow, ...infoArr);
 
       const table = new Table({
         rows: allRows,
