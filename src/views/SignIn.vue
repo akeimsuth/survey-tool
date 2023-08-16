@@ -139,13 +139,13 @@ export default {
             this.$router.push('/dashboard');
           //   console.log("USER: ",this.$store.state.user);
            } else if (auth === 'authenticated'){
-            // this.sleep(1000).then(() => {
+             this.sleep(500).then(() => {
               if(this.$store.state.firstTime === true){
                   this.$router.push(`/template-screen/${this.$store.state.assignedTemplates.id}`);
               } else {
                 this.$router.push('/my-surveys');
               }
-            //})
+            })
       
            } else {
             this.text = 'SIGN IN';

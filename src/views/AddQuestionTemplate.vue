@@ -137,7 +137,7 @@ export default {
               "question": questions.value[index].text,
               "order": index + 1,
               "type": questions.value[index].type,
-              "template": template.value.id
+              "user_template": template.value.id
             }
           })
           checker = true;

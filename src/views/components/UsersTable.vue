@@ -345,11 +345,11 @@ export default {
         }).catch(error => console.log(error));
           }
         })
+        this.closeSurveyModal();
         toast(`All Surveys added to user!`, {
                 autoClose: 3000,
                 type: toast.TYPE.SUCCESS
         });
-        this.closeModall();
       },
       submitFormTemplates() {
         // Handle form submission here

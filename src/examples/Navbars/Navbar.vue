@@ -129,6 +129,7 @@ export default {
     logout() {
       this.$store.dispatch('logout');
       this.$router.push('/sign-in');
+      localStorage.clear();
       window.location.href='/sign-in';
     },
     showModal() {

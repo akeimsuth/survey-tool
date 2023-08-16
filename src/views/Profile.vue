@@ -11,7 +11,7 @@
             <p class="mb-0 text-sm font-weight-bold">{{ email }}</p>
           </div>
         </div>
-        <div class="mx-auto mt-3 col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0">
+        <!-- <div class="mx-auto mt-3 col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0">
           <div class="nav-wrapper position-relative end-0">
             <ul class="p-1 bg-transparent nav nav-pills nav-fill" role="tablist">
               <li class="nav-item">
@@ -69,7 +69,7 @@
               </li>
             </ul>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

@@ -13,32 +13,18 @@
         </div>
         <div class="col-lg-6 col-5 my-auto text-end">
           <div class="dropdown float-lg-end pe-4">
-            <a
-              class="cursor-pointer"
-              id="dropdownTable"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fa fa-ellipsis-v text-secondary" aria-hidden="true"></i>
             </a>
-            <ul
-              class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5"
-              aria-labelledby="dropdownTable"
-            >
+            <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
               <li>
-                <a class="dropdown-item border-radius-md" href="javascript:;"
-                  >Action</a
-                >
+                <a class="dropdown-item border-radius-md" href="javascript:;">Action</a>
               </li>
               <li>
-                <a class="dropdown-item border-radius-md" href="javascript:;"
-                  >Another action</a
-                >
+                <a class="dropdown-item border-radius-md" href="javascript:;">Another action</a>
               </li>
               <li>
-                <a class="dropdown-item border-radius-md" href="javascript:;"
-                  >Something else here</a
-                >
+                <a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a>
               </li>
             </ul>
           </div>
@@ -50,19 +36,13 @@
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
-              <th
-                class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
-              >
+              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">
                 Report Table or Section
               </th>
-              <th
-                class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2"
-              >
+              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
                 Description
               </th>
-              <th
-                class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7"
-              >
+              <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">
                 Generate Report
               </th>
             </tr>
@@ -76,7 +56,7 @@
                   </div>
                 </div>
               </td>
- 
+
               <td class="text-sm">
                 <span class="text-xs font-weight-bold">Surveys Completed by Module</span>
               </td>
@@ -86,7 +66,7 @@
                 </div>
               </td>
             </tr>
-            <!-- <tr>
+            <tr>
               <td>
                 <div class="d-flex px-2 py-1">
                   <div class="d-flex flex-column justify-content-center">
@@ -102,7 +82,7 @@
                   <span class="text-xs font-weight-bold mx-2" @click="generateDemographic">Download</span>
                 </div>
               </td>
-            </tr> -->
+            </tr>
             <tr>
               <td>
                 <div class="d-flex px-2 py-1">
@@ -111,9 +91,10 @@
                   </div>
                 </div>
               </td>
-  
+
               <td class="text-sm">
-                <span class="text-xs font-weight-bold">Survey Section 1: Technology Platforms Used to Access Courseware</span>
+                <span class="text-xs font-weight-bold">Survey Section 1: Technology Platforms Used to Access
+                  Courseware</span>
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
@@ -129,10 +110,11 @@
                   </div>
                 </div>
               </td>
-  
+
               <td class="text-sm">
-                <span style="text-wrap: wrap;" class="text-xs font-weight-bold">Survey Section 2: Technical Problems / Other Error(s) Encountered
-NOTE: This report only generates issues that have been addressed.</span>
+                <span style="text-wrap: wrap;" class="text-xs font-weight-bold">Survey Section 2: Technical Problems /
+                  Other Error(s) Encountered
+                  NOTE: This report only generates issues that have been addressed.</span>
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
@@ -149,27 +131,6 @@ NOTE: This report only generates issues that have been addressed.</span>
 
 <script>
 import setTooltip from "@/assets/js/tooltip.js";
-import img1 from "../../assets/img/small-logos/logo-xd.svg";
-import img2 from "../../assets/img/team-1.jpg";
-import img3 from "@/assets/img/team-2.jpg";
-import img4 from "../../assets/img/team-3.jpg";
-import img5 from "../../assets/img/team-4.jpg";
-import img6 from "../../assets/img/small-logos/logo-atlassian.svg";
-import img7 from "../../assets/img/team-2.jpg";
-import img8 from "../../assets/img/team-4.jpg";
-import img9 from "../../assets/img/small-logos/logo-slack.svg";
-import img10 from "../../assets/img/team-3.jpg";
-import img11 from "../../assets/img/team-1.jpg";
-import img12 from "../../assets/img/small-logos/logo-spotify.svg";
-import img13 from "../../assets/img/team-4.jpg";
-import img14 from "../../assets/img/team-3.jpg";
-import img15 from "../../assets/img/team-4.jpg";
-import img16 from "../../assets/img/team-1.jpg";
-import img17 from "../../assets/img/small-logos/logo-jira.svg";
-import img18 from "../../assets/img/team-4.jpg";
-import img19 from "../../assets/img/small-logos/logo-invision.svg";
-import img20 from "../../assets/img/team-1.jpg";
-import img21 from "../../assets/img/team-4.jpg";
 // import test_doc from "../../assets/templates/test_doc.zip";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
@@ -184,39 +145,18 @@ export default {
   name: "projects-card",
   data() {
     return {
-      img1,
-      img2,
-      img3,
-      img4,
-      img5,
-      img6,
-      img7,
-      img8,
-      img9,
-      img10,
-      img11,
-      img12,
-      img13,
-      img14,
-      img15,
-      img16,
-      img17,
-      img18,
-      img19,
-      img20,
-      img21,
       module_id: 0,
       state: {
         name: 'San Luis Potosi',
         map: 'data:image/png;base64',
         municipalities: [
-          {name:'San Luis Potosi', population: 824000}, 
-          {name:'Rio Verde', population: 160000},
-          {name:'Cd Valles', population: 176000},
-          {name:'Matehuala', population:82726}
+          { name: 'San Luis Potosi', population: 824000 },
+          { name: 'Rio Verde', population: 160000 },
+          { name: 'Cd Valles', population: 176000 },
+          { name: 'Matehuala', population: 82726 }
         ],
         tourist_attractions: [
-          'Tamtoc', 'Sótano de las Golondrinas', 'Cascada de Tamul' 
+          'Tamtoc', 'Sótano de las Golondrinas', 'Cascada de Tamul'
         ]
       }
     };
@@ -242,72 +182,65 @@ export default {
   methods: {
     async generateCompletions() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-        const data = await axios.get(`https://psb.sitebix.com/api/submissions?filters[survey][module][id][$eq]=${this.module_id.id}&populate[survey][populate][module]=id&populate=user`);
-        // const account = await axios.get(`https://psb.sitebix.com/api/accounts/${this.$store.state.accountId}`);
-        // // Replace a placeholder in the template with the asset content
-        const arr = _.uniqBy(data.data.data, 'feedback');
-        console.log('ARR: ', arr);
-        //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
-        // doc.setData({data: arr, account_name: account.data.data.name,
-        //   day: moment(new Date()).format('dddd'),
-        //   date: moment(new Date()).format("MMMM Do, YYYY"),
-        // time: moment().format('LT')});
+      const data = await axios.get(`https://psb.sitebix.com/api/submissions?filters[survey][module][id][$eq]=${this.module_id.id}&populate[survey][populate][module]=id&populate=user`);
+      const arr = _.uniqBy(data.data.data, 'feedback');
+      console.log('ARR: ', arr);
 
 
       const title = new Paragraph({
-          text: "Report: Surveys Completed",
-          heading: HeadingLevel.HEADING_1,
-          alignment: AlignmentType.CENTER
+        text: "Report: Surveys Completed",
+        heading: HeadingLevel.HEADING_1,
+        alignment: AlignmentType.CENTER
       });
 
       // Title Row
       const titleRow = [
         new TableRow({
-            tableHeader: true,
-            children: [
-                new TableCell({
-                    children: [new Paragraph({
-                      text: this.module_id.name,
-                      alignment: AlignmentType.CENTER
-                    })],
-                    columnSpan: 3
-                })
-            ],
+          tableHeader: true,
+          children: [
+            new TableCell({
+              children: [new Paragraph({
+                text: this.module_id.name,
+                alignment: AlignmentType.CENTER
+              })],
+              columnSpan: 3
+            })
+          ],
         })
       ];
       // Header Row
       const headerRow = [
         new TableRow({
-            shading: {
-              color: "blue"
-            },
-            tableHeader: true,
-            children: [
-                new TableCell({
-                    children: [new Paragraph('USER')],
-                    shading: {
-                      fill: "auto",
-                      type: ShadingType.SOLID,
-                      color: "f2f2f2",
-                    },
-                }),
-                new TableCell({
-                    children: [new Paragraph('SURVEY')],
-                    shading: {
-                        fill: "auto",
-                        type: ShadingType.SOLID,
-                        color: "f2f2f2",
-                    },
-                }),
-                new TableCell({
-                    children: [new Paragraph('COMPLETED DATE')],
-                    shading: {
-                        fill: "auto",
-                        type: ShadingType.SOLID,
-                        color: "f2f2f2",
-                    },
-                }),
-            ],
+          shading: {
+            color: "blue"
+          },
+          tableHeader: true,
+          children: [
+            new TableCell({
+              children: [new Paragraph('USER')],
+              shading: {
+                fill: "auto",
+                type: ShadingType.SOLID,
+                color: "f2f2f2",
+              },
+            }),
+            new TableCell({
+              children: [new Paragraph('SURVEY')],
+              shading: {
+                fill: "auto",
+                type: ShadingType.SOLID,
+                color: "f2f2f2",
+              },
+            }),
+            new TableCell({
+              children: [new Paragraph('COMPLETED DATE')],
+              shading: {
+                fill: "auto",
+                type: ShadingType.SOLID,
+                color: "f2f2f2",
+              },
+            }),
+          ],
         }),
       ];
       // DATA Row
@@ -315,86 +248,178 @@ export default {
 
       arr.forEach(item => {
         let row = new TableRow({
-                  children: [
-                      new TableCell({
-                          children: [new Paragraph(item.user.username)],
-                      }),
-                      new TableCell({
-                          children: [new Paragraph(item.survey.name)],
-                      }),
-                      new TableCell({
-                          children: [new Paragraph(new Date(item.createdAt).toDateString())],
-                      }),
-                  ],
-              });
-              infoArr.push(row)
+          children: [
+            new TableCell({
+              children: [new Paragraph(item.user.username)],
+            }),
+            new TableCell({
+              children: [new Paragraph(item.survey.name)],
+            }),
+            new TableCell({
+              children: [new Paragraph(new Date(item.createdAt).toDateString())],
+            }),
+          ],
+        });
+        infoArr.push(row)
       });
 
       const allRows = [];
       allRows.push(...titleRow, ...headerRow, ...infoArr);
 
       const table = new Table({
-          rows: allRows,
-          width: {
-              size: 100,
-              type: WidthType.PERCENTAGE,
-          },
-          alignment: AlignmentType.CENTER,
+        rows: allRows,
+        width: {
+          size: 100,
+          type: WidthType.PERCENTAGE,
+        },
+        alignment: AlignmentType.CENTER,
       });
 
       const doc = new Document({
-          sections: [
-              {
-                  children: [
-                      title,
-                      table,
-                  ],
-              },
-          ],
+        sections: [
+          {
+            children: [
+              title,
+              table,
+            ],
+          },
+        ],
       });
 
       Packer.toBlob(doc).then((blob) => {
-          // saveAs from FileSaver will download the file
-          saveAs(blob, "example.docx");
+        // saveAs from FileSaver will download the file
+        saveAs(blob, "example.docx");
       });
-
-      // try {
-      //   const templatePath = "/files/survey_completions.docx"; // Path to your docx template
-
-      //   // Load the template
-      //   const response = await fetch(templatePath);
-      //   const templateBuffer = await response.arrayBuffer();
-      //   console.log(templateBuffer);
-      //   const zip = new PizZip(templateBuffer);
-
-      //   axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-      //   const data = await axios.get(`https://psb.sitebix.com/api/submissions?filters[survey][module][id][$eq]=${this.module_id}&populate[survey][populate][module]=id&populate=user`);
-      //   const account = await axios.get(`https://psb.sitebix.com/api/accounts/${this.$store.state.accountId}`);
-      //   // // Replace a placeholder in the template with the asset content
-      //   console.log(data.data);
-      //   const doc = new Docxtemplater().loadZip(zip);
-      //   const arr = _.uniqBy(data.data.data, 'feedback');
-      //   console.log('ARR: ', arr);
-      //   //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
-      //   doc.setData({data: arr, account_name: account.data.data.name,
-      //     day: moment(new Date()).format('dddd'),
-      //     date: moment(new Date()).format("MMMM Do, YYYY"),
-      //   time: moment().format('LT')});
-      //   doc.render();
-      //   const generatedContent = doc.getZip().generate({
-      //       type: "blob",
-      //       mimeType:
-      //         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      //     });
-      //   saveAs(generatedContent, `survey_completions-${Date.now()}.docx`);
-
-      //   console.log('Document generated successfully.');
-      // } catch (error) {
-      //   console.log('ERROR: ', error);
-      // }
 
     },
     async generateDemographic() {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+      const data = await axios.get(`https://psb.sitebix.com/api/user-submissions?populate[user_question][populate][user_template][fields][0]=id&populate[user_question][fields][0]=question&populate[user_answers][fields][0]=answer&populate[user][fields][1]=username`);
+      //const arr = _.uniqBy(data.data.data, 'user');
+      const arr = _.groupBy(data.data.data, user => user.user.id);
+      //const groupedArray = Object.values(arr);
+      console.log('ARR: ', Object.values(arr));
+
+      const questionsArray = [];
+      const answersArray = [];
+      const transformedData = data.data.data.reduce((result, entry) => {
+        const question = entry.user_question.question;
+        const answer = entry.user_answers[0]?.answer;
+        if (question && answer) {
+          questionsArray.push(question);
+          if (!_.find(answersArray, entry.user_answers[0]?.answer)) {
+            answersArray.push({
+              username: entry.user.username,
+              question: entry.user_question.question,
+              answer: entry.user_answers[0]?.answer
+            });
+          }
+          result[question] = answer;
+        }
+        return result;
+      }, {});
+      let merged = _.uniqWith(answersArray, (pre, cur) => {
+        if (pre.username == cur.username) {
+          cur.answer = cur.answer + "," + pre.answer;
+          return true;
+        }
+        return false;
+      });
+      //const v = _.sortBy(answersArray, 'question');
+
+      console.log('edited:', merged);
+      console.log(transformedData);
+
+      const finalAnswer = _.uniqBy(answersArray, 'user');
+      console.log(_.uniqBy(answersArray, 'user'));
+
+      const title = new Paragraph({
+        text: "Report: Demographic Profile of Participants",
+        heading: HeadingLevel.HEADING_1,
+        alignment: AlignmentType.CENTER
+      });
+
+      // // // Title Row
+      // const titleRow = [
+      //   new TableRow({
+      //       tableHeader: true,
+      //       children: [
+      //           new TableCell({
+      //               children: [new Paragraph({
+      //                 text: this.module_id.name,
+      //                 alignment: AlignmentType.CENTER
+      //               })],
+      //               columnSpan: 3
+      //           })
+      //       ],
+      //   })
+      // ];
+      // // Header Row
+      //const headerArr = [];
+      const totalQuestions = _.uniq(questionsArray);
+      const HeaderRow = [
+        new TableRow({
+          shading: {
+            color: "blue"
+          },
+          tableHeader: true,
+          children: totalQuestions.map((item) =>
+            new TableCell({
+              children: [new Paragraph(item)],
+              shading: {
+                fill: "auto",
+                type: ShadingType.SOLID,
+                color: "f2f2f2",
+              },
+            }),
+          )
+
+        })
+      ]
+      // // DATA Row
+      const infoArr = [];
+      finalAnswer.map((item) => {
+        let row = new TableRow({
+          children: _.uniq(item.answers).map((val) =>
+            new TableCell({
+              children: [new Paragraph(val)],
+            }),
+          ),
+        });
+        infoArr.push(row)
+
+      })
+
+      const allRows = [];
+      allRows.push(...HeaderRow, ...infoArr);
+
+      const table = new Table({
+        rows: allRows,
+        width: {
+          size: 100,
+          type: WidthType.PERCENTAGE,
+        },
+        alignment: AlignmentType.CENTER,
+      });
+
+      const doc = new Document({
+        sections: [
+          {
+            children: [
+              title,
+              table,
+            ],
+          },
+        ],
+      });
+
+      Packer.toBlob(doc).then((blob) => {
+        // saveAs from FileSaver will download the file
+        saveAs(blob, "demographic_example.docx");
+      });
+
+    },
+    async generateDemographic2() {
       try {
         const templatePath = "/files/Table 3-2-A.docx"; // Path to your docx template
 
@@ -411,11 +436,11 @@ export default {
         console.log(data.data);
         const doc = new Docxtemplater().loadZip(zip);
         const arr = _.groupBy(data.data.data, user => user.user.id);
-       // const answers = _.map(data.data.data, 'user_answers');
+        // const answers = _.map(data.data.data, 'user_answers');
 
         console.log('ARR: ', arr);
         //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
-        doc.setData({data: Object.values(arr), template: account.data.data.name});
+        doc.setData({ data: Object.values(arr), template: account.data.data.name });
         doc.render();
         // const generatedContent = doc.getZip().generate({
         //     type: "blob",
@@ -431,6 +456,7 @@ export default {
 
     },
     async generatePlatform() {
+
       try {
         const templatePath = "/files/Table 3-2-C.docx"; // Path to your docx template
 
@@ -448,43 +474,77 @@ export default {
         const arr = _.uniqBy(data.data.data, 'feedback');
         const browsers = _.uniq(_.map(data.data.data, 'deviceBrowser'));
         console.log('ARR: ', arr);
+
+        const calculateBrowserPercentage = (browserName, deviceName, personsArray) => {
+          const totalCount = personsArray.length;
+          let browserCount = 0;
+          // Count occurrences of the provided browser name
+          personsArray.forEach(person => {
+            const userBrowser = person.deviceBrowser;
+            const userDevice = person.devicePlatform; // Replace with the actual property name containing the browser name
+            if (userBrowser.toLowerCase().includes(browserName.toLowerCase()) && userDevice.toLowerCase().includes(deviceName.toLowerCase())) {
+              browserCount++;
+            }
+          });
+          // Calculate the percentage
+          const percentage = (browserCount / totalCount) * 100;
+          return percentage.toFixed(0);
+        }
+        const calculateDevicePercentage = (deviceName, personsArray) => {
+          const totalCount = personsArray.length;
+          let browserCount = 0;
+          // Count occurrences of the provided browser name
+          personsArray.forEach(person => {
+            const userDevice = person.devicePlatform; // Replace with the actual property name containing the browser name
+            if (userDevice.toLowerCase().includes(deviceName.toLowerCase())) {
+              browserCount++;
+            }
+          });
+          // Calculate the percentage
+          const percentage = (browserCount / totalCount) * 100;
+          return percentage.toFixed(0);
+        }
+        // console.log('Percent: ', calculateBrowserPercentage('Edge',arr));
         //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
-        doc.setData({data: arr, browsers: browsers, 
-          percent_pc: 0,
-          percent_mac: 0,
-          percent_ios: 0,
-          percent_android: 0,
+        doc.setData({
+          data: arr, browsers: browsers,
+          name: this.module_id.name,
+          percent_pc: calculateDevicePercentage('Windows',arr),
+          percent_mac: calculateDevicePercentage('Mac',arr),
+          percent_ios: calculateDevicePercentage('ios',arr),
+          percent_android: calculateDevicePercentage('Android',arr),
           mobile_ios: 0,
           tablet_ios: 0,
           mobile_android: 0,
           tablet_android: 0,
-          pc_ie: 0,
-          pc_me: 0,
-          pc_gc: 0,
-          pc_mf: 0,
+          pc_ie: calculateBrowserPercentage('Explorer', 'Windows',arr),
+          pc_me: calculateBrowserPercentage('Edge','Windows',arr),
+          pc_gc: calculateBrowserPercentage('Chrome','Windows',arr),
+          pc_mf: calculateBrowserPercentage('Firefox','Windows',arr),
           pc_other: 0,
-          mac_gc: 0,
-          mac_mf: 0,
-          mac_safari: 0,
+          mac_gc: calculateBrowserPercentage('Chrome','Mac',arr),
+          mac_mf: calculateBrowserPercentage('Firefox','Mac',arr),
+          mac_safari: calculateBrowserPercentage('safari','Mac',arr),
           mac_other: 0,
-          ios_me: 0,
-          ios_gc: 0,
-          ios_mf: 0,
-          ios_safari: 0,
+          ios_me: calculateBrowserPercentage('Edge','ios',arr),
+          ios_gc: calculateBrowserPercentage('Chrome','ios',arr),
+          ios_mf: calculateBrowserPercentage('Firefox','ios',arr),
+          ios_safari: calculateBrowserPercentage('safari','ios',arr),
           ios_other: 0,
-          android_me: 0,
-          android_gc: 0,
-          android_mf: 0,
+          android_me: calculateBrowserPercentage('Edge','Android',arr),
+          android_gc: calculateBrowserPercentage('Chrome','Android',arr),
+          android_mf: calculateBrowserPercentage('Firefox','Android',arr),
           android_other: 0,
           day: moment(new Date()).format('dddd'),
           date: moment(new Date()).format("MMMM Do, YYYY"),
-        time: moment().format('LT')});
+          time: moment().format('LT')
+        });
         doc.render();
         const generatedContent = doc.getZip().generate({
-            type: "blob",
-            mimeType:
-              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          });
+          type: "blob",
+          mimeType:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        });
         saveAs(generatedContent, `survey_completions-${Date.now()}.docx`);
 
         console.log('Document generated successfully.');
@@ -494,41 +554,152 @@ export default {
 
     },
     async generateBugs() {
-      try {
-        const templatePath = "/files/bugs.docx"; // Path to your docx template
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+      const data = await axios.get(`https://psb.sitebix.com/api/bugs?populate[survey][fields][0]=id&populate[survey][fields][1]=name&populate[bug_logs]=*`);
+      const arr = data.data.data;
+      console.log('ARR: ', arr);
 
-        // Load the template
-        const response = await fetch(templatePath);
-        const templateBuffer = await response.arrayBuffer();
-        console.log(templateBuffer);
-        const zip = new PizZip(templateBuffer);
 
-        axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-        const data = await axios.get(`https://psb.sitebix.com/api/bugs?populate[survey][fields][0]=id&populate[survey][fields][1]=name&populate[bug_logs]=*`);
-        // // Replace a placeholder in the template with the asset content
-        console.log(data.data);
-        const doc = new Docxtemplater().loadZip(zip);
-        //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
-        doc.setData({data: data.data.data});
-        doc.render();
-        const generatedContent = doc.getZip().generate({
-            type: "blob",
-            mimeType:
-              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      const title = new Paragraph({
+        text: "Report: Questionnaire Summary – Technical Problems / Other Error(s) Encountered",
+        heading: HeadingLevel.HEADING_1,
+        alignment: AlignmentType.CENTER
+      });
+
+      // Title Row
+      // const titleRow = [
+      //   new TableRow({
+      //     tableHeader: true,
+      //     children: [
+      //       new TableCell({
+      //         children: [new Paragraph({
+      //           text: this.module_id.name,
+      //           alignment: AlignmentType.CENTER
+      //         })],
+      //         columnSpan: 3
+      //       })
+      //     ],
+      //   })
+      // ];
+      // Header Row
+      const headerRow = [
+        new TableRow({
+          shading: {
+            color: "blue"
+          },
+          tableHeader: true,
+          children: [
+            new TableCell({
+              children: [new Paragraph('COMMENT')],
+              shading: {
+                fill: "auto",
+                type: ShadingType.SOLID,
+                color: "f2f2f2",
+              },
+            }),
+            new TableCell({
+              children: [new Paragraph('STATUS')],
+              shading: {
+                fill: "auto",
+                type: ShadingType.SOLID,
+                color: "f2f2f2",
+              },
+            }),
+            new TableCell({
+              children: [new Paragraph('LAST UPDATED DATE')],
+              shading: {
+                fill: "auto",
+                type: ShadingType.SOLID,
+                color: "f2f2f2",
+              },
+            }),
+          ],
+        }),
+      ];
+      // DATA Row
+      const infoArr = [];
+
+      arr.forEach(items => {
+        items.bug_logs.forEach(item => {
+          let row = new TableRow({
+            children: [
+              new TableCell({
+                children: [new Paragraph(item.comment)],
+              }),
+              new TableCell({
+                children: [new Paragraph(item.status)],
+              }),
+              new TableCell({
+                children: [new Paragraph(new Date(item.updatedAt).toDateString())],
+              }),
+            ],
           });
-        saveAs(generatedContent, `technical_issues-${Date.now()}.docx`);
+          infoArr.push(row)
+        })
+      });
 
-        console.log('Document generated successfully.');
-      } catch (error) {
-        console.log('ERROR: ', error);
-      }
+      const allRows = [];
+      allRows.push(...headerRow, ...infoArr);
+
+      const table = new Table({
+        rows: allRows,
+        width: {
+          size: 100,
+          type: WidthType.PERCENTAGE,
+        },
+        alignment: AlignmentType.CENTER,
+      });
+
+      const doc = new Document({
+        sections: [
+          {
+            children: [
+              title,
+              table,
+            ],
+          },
+        ],
+      });
+
+      Packer.toBlob(doc).then((blob) => {
+        // saveAs from FileSaver will download the file
+        saveAs(blob, "example.docx");
+      });
+      // try {
+      //   const templatePath = "/files/bugs.docx"; // Path to your docx template
+
+      //   // Load the template
+      //   const response = await fetch(templatePath);
+      //   const templateBuffer = await response.arrayBuffer();
+      //   console.log(templateBuffer);
+      //   const zip = new PizZip(templateBuffer);
+
+      //   axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+      //   const data = await axios.get(`https://psb.sitebix.com/api/bugs?populate[survey][fields][0]=id&populate[survey][fields][1]=name&populate[bug_logs]=*`);
+      //   // // Replace a placeholder in the template with the asset content
+      //   console.log(data.data);
+      //   const doc = new Docxtemplater().loadZip(zip);
+      //   //arr.push(data.data.data, {account_name: data.data.data[0].survey.module.account.name})
+      //   doc.setData({ data: data.data.data });
+      //   doc.render();
+      //   const generatedContent = doc.getZip().generate({
+      //     type: "blob",
+      //     mimeType:
+      //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      //   });
+      //   saveAs(generatedContent, `technical_issues-${Date.now()}.docx`);
+
+      //   console.log('Document generated successfully.');
+      // } catch (error) {
+      //   console.log('ERROR: ', error);
+      // }
 
     },
   }
 };
 </script>
 <style>
-.text-xs{
+.text-xs {
   cursor: pointer;
 }
 </style>
