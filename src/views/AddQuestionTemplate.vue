@@ -7,6 +7,11 @@
         <div style="position: relative;">
 
           <div v-for="(question, index) in savedQuestions" :key="index" class="question form-group">
+            <div style="display: flex; justify-content: end;" class="input-group-append">
+                  <!-- <button class="btn btn-outline-primary btn-remove-answer btn-sm px-2 mb-0" @click="updateQuestion(index)">Update Content</button> -->
+                  <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeApiQuestion(question.id)">
+                    <i class="fas fa-trash me-2" aria-hidden="true"></i>Remove Question</button>
+            </div>
             <div>
               <label class="label" for="questionType">Select Question Type:</label>
               <select :value="question.type" class="form-control form-select question-type">
@@ -35,6 +40,9 @@
           </div>
 
           <div v-for="(question, index) in questions" :key="index" class="question form-group">
+            <div style="display: flex; justify-content: end;" class="input-group-append">
+                  <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeQuestion(index)">Remove Question</button>
+            </div>
             <div>
               <label class="label" for="questionType">Select Question Type:</label>
               <select v-model="question.type" class="form-control form-select question-type">
@@ -116,7 +124,9 @@ export default {
     const removeAnswer = (question, index) => {
       question.answers.splice(index, 1);
     };
-
+    const removeQuestion = (index) => {
+      questions.value.splice(index, 1);
+    };
     const removeApiAnswer = (id) => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
       axios.delete(`https://psb.sitebix.com/api/user-answers/${id}`)
@@ -124,7 +134,13 @@ export default {
           store.dispatch('fetchTemplateQuestions', { id: template.value.id });
         }).catch(error => console.log(error));
     }
-
+    const removeApiQuestion = (id) => {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
+      axios.delete(`https://psb.sitebix.com/api/user-questions/${id}`)
+      .then(() => {
+        store.dispatch('fetchTemplateQuestions', { id: template.value.id });
+      }).catch(error => console.log(error));
+    }
     const submit = async () => {
       //const save_questions = _.map(savedQuestions, 'id');
       let checker = false;
@@ -137,7 +153,7 @@ export default {
               "question": questions.value[index].text,
               "order": index + 1,
               "type": questions.value[index].type,
-              "template": template.value.id
+              "user_template": template.value.id
             }
           })
           checker = true;
@@ -180,6 +196,8 @@ export default {
       addQuestion,
       addAnswer,
       removeAnswer,
+      removeQuestion,
+      removeApiQuestion,
       removeApiAnswer,
       submit,
     };

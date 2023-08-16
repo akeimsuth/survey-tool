@@ -37,7 +37,8 @@
 
           <div v-for="(question, index) in questions" :key="index" class="question form-group">
             <div style="display: flex; justify-content: end;" class="input-group-append">
-                  <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeQuestion(index)">Remove Question</button>
+                  <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeQuestion(index)">
+                    <i class="fas fa-trash me-2" aria-hidden="true"></i>Remove Question</button>
             </div>
             <div>
               <label class="label" for="questionType">Select Question Type:</label>

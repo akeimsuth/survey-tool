@@ -62,7 +62,7 @@
             </li>
           </ul>
         </div>
-        <button type="button" class="btn btn-sm btn-error" @click="addAllSurveys">Add All Surveys</button><br/>
+        <button type="button" class="btn btn-sm btn-outline-warning" @click="addAllSurveys">Add All Surveys</button><br/>
         <label>Survey(s)</label>
         <div class="mb-3">
           <select class="form-control form-select" v-model="survey_id" @change="getSurvey">
@@ -94,7 +94,7 @@
           <ul class="badge-text-parent" id="input_group">
             <li class="badge-text-container" name="survey">
               <span class="badge-text">{{ assignedTemp.name }}</span>
-              <span class="close-icon">&times;</span>
+              <span class="close-icon" @click="removeUserFromTemplate(assignedTemp.id, user_id)">&times;</span>
             </li>
           </ul>
         </div>
@@ -315,6 +315,20 @@ export default {
           
         }).catch(error => console.log(error));
       },
+      removeUserFromTemplate(id, user){
+        axios.get(`https://psb.sitebix.com/api/user-templates/${id}?populate[users][fields][0]=id`)
+        .then((response) => {
+          const users_arr = _.filter(response.data.data.users, function(x) { return x.id !== user; })
+
+            this.$store.dispatch('updateTemplate', { id: id, users: users_arr})
+            toast(`Template removed successfully!`, {
+                    autoClose: 3000,
+                    type: toast.TYPE.SUCCESS
+            });
+            this.closeModalTemplates();
+          
+        }).catch(error => console.log(error));
+      },
       addAllSurveys(){
         console.log('SUR: ', this.surveys);
         this.surveys.map((survey) => {
@@ -331,11 +345,11 @@ export default {
         }).catch(error => console.log(error));
           }
         })
+        this.closeSurveyModal();
         toast(`All Surveys added to user!`, {
                 autoClose: 3000,
                 type: toast.TYPE.SUCCESS
         });
-        this.closeModall();
       },
       submitFormTemplates() {
         // Handle form submission here

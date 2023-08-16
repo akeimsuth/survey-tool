@@ -188,8 +188,9 @@ export default createStore({
         commit('setIsAuthenticated', isAuthenticated);
         commit('setUser', data);
         if(data){
+          console.log('USER DATA: ', data.data.user);
           await dispatch('getRole');
-          //await dispatch('fetchAssignedTemplates', this.state.user.data.user.id);
+          await dispatch('fetchAssignedTemplates', data.data.user.id);
         }
         console.log('SUCCESS!!');
         return this.state.role;
@@ -329,39 +330,42 @@ export default createStore({
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       const arr = this.state.surveys;
       console.log('VAL: ', val);
-      for (let index = 0; index < 1; index++) {
+      for (let index = 0; arr.length > index; index++) {
         const data = await axios.get(`https://psb.sitebix.com/api/submissions/?filters[user][id][$eq]=${this.state.user.data.user.id}&filters[survey][id][$eq]=${arr[index].id}`)
         console.log('DATE: ', data.data.data);
-        arr[index].completed = moment(data.data.data[0].updatedAt).format('MMM DD, YYYY');
+        if(data.data.data.length > 0){
+          arr[index].completed = moment(data.data.data[0].updatedAt).format('MMM DD, YYYY');
+        }
       }
       commit('setAssignedSurveys', arr);
       
     },
-    checkIfFirstTime({ commit }) {
+    checkIfFirstTime({ commit }, id, tempId) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/user-submissions/?filters[user][id][$eq]=${this.state.user.data.user.id}&filters[user_template][id][$eq]=${this.state.assignedTemplates.id}`)
+      axios.get(`https://psb.sitebix.com/api/user-submissions/?filters[user][id][$eq]=${id}&filters[user_template][id][$eq]=${tempId}`)
         .then(response => {
-          console.log('RESP: ', response.data.data.length > 0);
-          commit('setFirstTime',response.data.data.length == 0);
+          console.log('RESP: ', response.data.data.length === 0);
+          commit('setFirstTime',response.data.data.length === 0);
           
         })
         .catch(error => {
           console.error('Error fetching users:', error);
         });
     },
-    fetchAssignedTemplates({ commit, dispatch }, {id}) {
+    fetchAssignedTemplates({ commit, dispatch }, id) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`https://psb.sitebix.com/api/users/${id}?populate=user_template`)
         .then(async(response) => {
           console.log('TOP: ', response.data);
           commit('setAssignedTemplates',response.data.user_template);
-          if(this.state.role == 'authenticated'){
-            await dispatch('checkIfFirstTime');
-          }
+          //if(this.state.role == 'authenticated'){
+          await dispatch('checkIfFirstTime', id, response.data.user_template.id);
+          //}
         })
         .catch(error => {
+          commit('setFirstTime',false);
           console.error('Error fetching users:', error);
         });
     },

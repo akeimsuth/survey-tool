@@ -66,7 +66,7 @@
               <td>{{ bug.page }}</td>
               <td>{{ bug.type }}</td>
               <td><button @click="showModal(bug.id, bug.type)" :disabled="bug.status == 'Addressed'"
-                  class="btn btn-warning text-white">{{ bug.status }}</button></td>
+                  :class="getColorBasedOnText(bug.status)"><i class="fas fa-comment"></i> {{ bug.status }}</button></td>
               <td></td>
               <!-- Add other user information columns here -->
             </tr>
@@ -155,6 +155,19 @@ export default {
     },
     closeModal() {
       this.isModalOpen = false;
+    },
+    getColorBasedOnText(buttonText) {
+      if (buttonText === 'Not Addressed') {
+        return 'btn btn-outline-danger mb-0';
+      } else if (buttonText === 'PWD Feedback Needed') {
+        return 'btn btn-outline-warning mb-0';
+      } else if (buttonText === 'In Progress') {
+        return 'btn btn-outline-primary mb-0';
+      } else if (buttonText === 'Non-Actionable') {
+        return 'btn btn-outline-primary mb-0';
+      }
+      // Return a default color if no match is found
+      return 'btn btn-outline-success mb-0';
     },
     async submitBug() {
       const quest = await axios.post('https://psb.sitebix.com/api/bug-logs', {
