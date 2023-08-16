@@ -62,7 +62,7 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2" @click="generateCompletions">Download</span>
+                  <span class="btn btn-sm btn-outline-primary mb-0 text-xs font-weight-bold mx-2" @click="generateCompletions">Download</span>
                 </div>
               </td>
             </tr>
@@ -79,7 +79,7 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2" @click="generateDemographic">Download</span>
+                  <span class="btn btn-sm btn-outline-primary mb-0 text-xs font-weight-bold mx-2" @click="generateDemographic">Download</span>
                 </div>
               </td>
             </tr>
@@ -98,7 +98,7 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2" @click="generatePlatform">Download</span>
+                  <span class="btn btn-sm btn-outline-primary mb-0 text-xs font-weight-bold mx-2" @click="generatePlatform">Download</span>
                 </div>
               </td>
             </tr>
@@ -118,7 +118,7 @@
               </td>
               <td class="align-middle">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="text-xs font-weight-bold mx-2" @click="generateBugs">Download</span>
+                  <span class="btn btn-sm btn-outline-primary mb-0 text-xs font-weight-bold mx-2" @click="generateBugs">Download</span>
                 </div>
               </td>
             </tr>
