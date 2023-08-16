@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import { createApp } from "vue";
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import App from "./App.vue";
 import store from "./store";
 import router from "./router";
@@ -21,8 +22,10 @@ import "./assets/css/nucleo-icons.css";
 import "./assets/css/nucleo-svg.css";
 import SoftUIDashboard from "./soft-ui-dashboard";
 
+
 const appInstance = createApp(App);
 appInstance.use(store);
 appInstance.use(router);
 appInstance.use(SoftUIDashboard);
 appInstance.mount("#app");
+

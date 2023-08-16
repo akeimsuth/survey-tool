@@ -1,39 +1,42 @@
 {
   "name": "vue-soft-ui-dashboard",
   "version": "3.0.0",
-  "private": true,
   "author": "Creative Tim",
-  "license": "SEE LICENSE IN <https://www.creative-tim.com/license>",
   "description": "VueJS version of Soft UI Dashboard PRO by Creative Tim",
-  "homepage": "https://demos.creative-tim.com/vue-soft-ui-dashboard/",
-  "bugs": {
-    "url": "https://github.com/creativetimofficial/vue-soft-ui-dashboard/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/creativetimofficial/vue-soft-ui-dashboard.git"
-  },
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve --mode=development",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@contractmill/docx": "^7.5.2",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "@popperjs/core": "2.10.2",
+    "@types/lodash": "^4.14.197",
+    "@vueup/vue-quill": "^1.2.0",
+    "axios": "^1.4.0",
     "bootstrap": "5.1.3",
     "chart.js": "3.6.0",
-    "core-js": "3.6.5",
+    "core-js": "^3.32.0",
+    "docx": "^8.2.2",
+    "docxtemplater": "^3.37.13",
+    "file-saver": "^2.0.5",
     "jkanban": "^1.3.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "pizzip": "^3.1.4",
     "vue": "3.2.0",
     "vue-flatpickr-component": "9.0.5",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.2"
+    "vue3-toastify": "^0.1.12",
+    "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.5",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",

@@ -8,8 +8,7 @@
             :class="this.$store.state.isRTL ? 'text-lg-end' : 'text-lg-start'"
           >
             ©
-            {{ new Date().getFullYear() }}, made with
-            <i class="fa fa-heart"></i> by
+            {{ new Date().getFullYear() }} by
             <a
               href="#"
               class="font-weight-bold"

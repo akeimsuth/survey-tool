@@ -10,9 +10,10 @@
         class="form-control"
         :class="getClasses(size, success, error)"
         :name="name"
-        :value="value"
         :placeholder="placeholder"
         :isRequired="isRequired"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
       />
       <span v-if="iconDir === 'right'" class="input-group-text">
         <i :class="getIcon(icon)"></i>
@@ -25,6 +26,11 @@
 export default {
   name: "SoftInput",
   props: {
+    modelValue: {
+      type: String,
+      default: '',
+      required: true
+    },
     size: {
       type: String,
       default: "default",
@@ -88,6 +94,9 @@ export default {
     },
     getIcon: (icon) => (icon ? icon : null),
     hasIcon: (icon) => (icon ? "input-group" : null),
+    update() {
+      this.$emit('change', this.value)
+    }
   },
 };
 </script>
