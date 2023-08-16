@@ -226,6 +226,576 @@ export default {
   },
   mounted() {
     setTooltip();
+    const intData = [
+      {
+        "id": 8,
+        "createdAt": "2023-08-14T22:11:57.057Z",
+        "updatedAt": "2023-08-14T22:11:57.057Z",
+        "publishedAt": "2023-08-14T22:11:57.030Z",
+        "devicePlatform": null,
+        "deviceBrowser": null,
+        "feedback": null,
+        "user_question": {
+          "id": 9,
+          "question": "Your military rank",
+          "order": 3,
+          "type": "single",
+          "createdAt": "2023-08-14T22:08:28.049Z",
+          "updatedAt": "2023-08-16T02:07:56.958Z",
+          "publishedAt": "2023-08-14T22:08:28.046Z",
+          "user_template": {
+            "id": 1,
+            "name": "Test Template",
+            "description": "<h2><strong><em>This is a new template</em></strong></h2>",
+            "createdAt": "2023-08-09T20:06:36.717Z",
+            "updatedAt": "2023-08-15T23:49:38.182Z",
+            "publishedAt": "2023-08-09T20:06:36.715Z",
+            "user_questions": [
+              {
+                "id": 10,
+                "question": "Are you a current or former 92F10?"
+              },
+              {
+                "id": 8,
+                "question": "Did you complete the tutorial?"
+              },
+              {
+                "id": 7,
+                "question": "If you are not a skill level 92F10, the length of time in your present position:"
+              },
+              {
+                "id": 9,
+                "question": "Your military rank"
+              }
+            ]
+          }
+        },
+        "user": {
+          "id": 2,
+          "username": "user"
+        },
+        "user_answers": [
+          {
+            "id": 21,
+            "answer": "E-3"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "createdAt": "2023-08-14T22:11:57.062Z",
+        "updatedAt": "2023-08-14T22:11:57.062Z",
+        "publishedAt": "2023-08-14T22:11:57.043Z",
+        "devicePlatform": null,
+        "deviceBrowser": null,
+        "feedback": null,
+        "user_question": {
+          "id": 8,
+          "question": "Did you complete the tutorial?",
+          "order": 2,
+          "type": "single",
+          "createdAt": "2023-08-14T22:08:27.712Z",
+          "updatedAt": "2023-08-16T02:07:42.738Z",
+          "publishedAt": "2023-08-14T22:08:27.710Z",
+          "user_template": {
+            "id": 1,
+            "name": "Test Template",
+            "description": "<h2><strong><em>This is a new template</em></strong></h2>",
+            "createdAt": "2023-08-09T20:06:36.717Z",
+            "updatedAt": "2023-08-15T23:49:38.182Z",
+            "publishedAt": "2023-08-09T20:06:36.715Z",
+            "user_questions": [
+              {
+                "id": 10,
+                "question": "Are you a current or former 92F10?"
+              },
+              {
+                "id": 8,
+                "question": "Did you complete the tutorial?"
+              },
+              {
+                "id": 7,
+                "question": "If you are not a skill level 92F10, the length of time in your present position:"
+              },
+              {
+                "id": 9,
+                "question": "Your military rank"
+              }
+            ]
+          }
+        },
+        "user": {
+          "id": 2,
+          "username": "user"
+        },
+        "user_answers": [
+          {
+            "id": 17,
+            "answer": "Yes"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "createdAt": "2023-08-14T22:11:57.066Z",
+        "updatedAt": "2023-08-14T22:11:57.066Z",
+        "publishedAt": "2023-08-14T22:11:57.052Z",
+        "devicePlatform": null,
+        "deviceBrowser": null,
+        "feedback": null,
+        "user_question": {
+          "id": 7,
+          "question": "If you are not a skill level 92F10, the length of time in your present position:",
+          "order": 1,
+          "type": "single",
+          "createdAt": "2023-08-14T22:08:27.046Z",
+          "updatedAt": "2023-08-16T02:07:49.879Z",
+          "publishedAt": "2023-08-14T22:08:27.041Z",
+          "user_template": {
+            "id": 1,
+            "name": "Test Template",
+            "description": "<h2><strong><em>This is a new template</em></strong></h2>",
+            "createdAt": "2023-08-09T20:06:36.717Z",
+            "updatedAt": "2023-08-15T23:49:38.182Z",
+            "publishedAt": "2023-08-09T20:06:36.715Z",
+            "user_questions": [
+              {
+                "id": 10,
+                "question": "Are you a current or former 92F10?"
+              },
+              {
+                "id": 8,
+                "question": "Did you complete the tutorial?"
+              },
+              {
+                "id": 7,
+                "question": "If you are not a skill level 92F10, the length of time in your present position:"
+              },
+              {
+                "id": 9,
+                "question": "Your military rank"
+              }
+            ]
+          }
+        },
+        "user": {
+          "id": 2,
+          "username": "user"
+        },
+        "user_answers": [
+          {
+            "id": 13,
+            "answer": "Less than 5 years"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "createdAt": "2023-08-14T22:11:57.085Z",
+        "updatedAt": "2023-08-14T22:11:57.085Z",
+        "publishedAt": "2023-08-14T22:11:57.072Z",
+        "devicePlatform": null,
+        "deviceBrowser": null,
+        "feedback": null,
+        "user_question": {
+          "id": 10,
+          "question": "Are you a current or former 92F10?",
+          "order": 4,
+          "type": "single",
+          "createdAt": "2023-08-14T22:08:28.842Z",
+          "updatedAt": "2023-08-16T02:07:28.109Z",
+          "publishedAt": "2023-08-14T22:08:28.840Z",
+          "user_template": {
+            "id": 1,
+            "name": "Test Template",
+            "description": "<h2><strong><em>This is a new template</em></strong></h2>",
+            "createdAt": "2023-08-09T20:06:36.717Z",
+            "updatedAt": "2023-08-15T23:49:38.182Z",
+            "publishedAt": "2023-08-09T20:06:36.715Z",
+            "user_questions": [
+              {
+                "id": 10,
+                "question": "Are you a current or former 92F10?"
+              },
+              {
+                "id": 8,
+                "question": "Did you complete the tutorial?"
+              },
+              {
+                "id": 7,
+                "question": "If you are not a skill level 92F10, the length of time in your present position:"
+              },
+              {
+                "id": 9,
+                "question": "Your military rank"
+              }
+            ]
+          }
+        },
+        "user": {
+          "id": 2,
+          "username": "user"
+        },
+        "user_answers": [
+          {
+            "id": 25,
+            "answer": "Yes"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "createdAt": "2023-08-15T04:52:18.438Z",
+        "updatedAt": "2023-08-15T04:52:18.438Z",
+        "publishedAt": "2023-08-15T04:52:18.410Z",
+        "devicePlatform": null,
+        "deviceBrowser": null,
+        "feedback": null,
+        "user_question": {
+          "id": 7,
+          "question": "If you are not a skill level 92F10, the length of time in your present position:",
+          "order": 1,
+          "type": "single",
+          "createdAt": "2023-08-14T22:08:27.046Z",
+          "updatedAt": "2023-08-16T02:07:49.879Z",
+          "publishedAt": "2023-08-14T22:08:27.041Z",
+          "user_template": {
+            "id": 1,
+            "name": "Test Template",
+            "description": "<h2><strong><em>This is a new template</em></strong></h2>",
+            "createdAt": "2023-08-09T20:06:36.717Z",
+            "updatedAt": "2023-08-15T23:49:38.182Z",
+            "publishedAt": "2023-08-09T20:06:36.715Z",
+            "user_questions": [
+              {
+                "id": 10,
+                "question": "Are you a current or former 92F10?"
+              },
+              {
+                "id": 8,
+                "question": "Did you complete the tutorial?"
+              },
+              {
+                "id": 7,
+                "question": "If you are not a skill level 92F10, the length of time in your present position:"
+              },
+              {
+                "id": 9,
+                "question": "Your military rank"
+              }
+            ]
+          }
+        },
+        "user": {
+          "id": 3,
+          "username": "user2"
+        },
+        "user_answers": [
+          {
+            "id": 13,
+            "answer": "Less than 5 years"
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "createdAt": "2023-08-15T04:52:18.439Z",
+        "updatedAt": "2023-08-15T04:52:18.439Z",
+        "publishedAt": "2023-08-15T04:52:18.420Z",
+        "devicePlatform": null,
+        "deviceBrowser": null,
+        "feedback": null,
+        "user_question": {
+          "id": 9,
+          "question": "Your military rank",
+          "order": 3,
+          "type": "single",
+          "createdAt": "2023-08-14T22:08:28.049Z",
+          "updatedAt": "2023-08-16T02:07:56.958Z",
+          "publishedAt": "2023-08-14T22:08:28.046Z",
+          "user_template": {
+            "id": 1,
+            "name": "Test Template",
+            "description": "<h2><strong><em>This is a new template</em></strong></h2>",
+            "createdAt": "2023-08-09T20:06:36.717Z",
+            "updatedAt": "2023-08-15T23:49:38.182Z",
+            "publishedAt": "2023-08-09T20:06:36.715Z",
+            "user_questions": [
+              {
+                "id": 10,
+                "question": "Are you a current or former 92F10?"
+              },
+              {
+                "id": 8,
+                "question": "Did you complete the tutorial?"
+              },
+              {
+                "id": 7,
+                "question": "If you are not a skill level 92F10, the length of time in your present position:"
+              },
+              {
+                "id": 9,
+                "question": "Your military rank"
+              }
+            ]
+          }
+        },
+        "user": {
+          "id": 3,
+          "username": "user2"
+        },
+        "user_answers": [
+          {
+            "id": 23,
+            "answer": "E-6 and above"
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "createdAt": "2023-08-15T04:52:18.442Z",
+        "updatedAt": "2023-08-15T04:52:18.442Z",
+        "publishedAt": "2023-08-15T04:52:18.429Z",
+        "devicePlatform": null,
+        "deviceBrowser": null,
+        "feedback": null,
+        "user_question": {
+          "id": 10,
+          "question": "Are you a current or former 92F10?",
+          "order": 4,
+          "type": "single",
+          "createdAt": "2023-08-14T22:08:28.842Z",
+          "updatedAt": "2023-08-16T02:07:28.109Z",
+          "publishedAt": "2023-08-14T22:08:28.840Z",
+          "user_template": {
+            "id": 1,
+            "name": "Test Template",
+            "description": "<h2><strong><em>This is a new template</em></strong></h2>",
+            "createdAt": "2023-08-09T20:06:36.717Z",
+            "updatedAt": "2023-08-15T23:49:38.182Z",
+            "publishedAt": "2023-08-09T20:06:36.715Z",
+            "user_questions": [
+              {
+                "id": 10,
+                "question": "Are you a current or former 92F10?"
+              },
+              {
+                "id": 8,
+                "question": "Did you complete the tutorial?"
+              },
+              {
+                "id": 7,
+                "question": "If you are not a skill level 92F10, the length of time in your present position:"
+              },
+              {
+                "id": 9,
+                "question": "Your military rank"
+              }
+            ]
+          }
+        },
+        "user": {
+          "id": 3,
+          "username": "user2"
+        },
+        "user_answers": [
+          {
+            "id": 25,
+            "answer": "Yes"
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "createdAt": "2023-08-15T04:52:18.463Z",
+        "updatedAt": "2023-08-15T04:52:18.463Z",
+        "publishedAt": "2023-08-15T04:52:18.455Z",
+        "devicePlatform": null,
+        "deviceBrowser": null,
+        "feedback": null,
+        "user_question": {
+          "id": 8,
+          "question": "Did you complete the tutorial?",
+          "order": 2,
+          "type": "single",
+          "createdAt": "2023-08-14T22:08:27.712Z",
+          "updatedAt": "2023-08-16T02:07:42.738Z",
+          "publishedAt": "2023-08-14T22:08:27.710Z",
+          "user_template": {
+            "id": 1,
+            "name": "Test Template",
+            "description": "<h2><strong><em>This is a new template</em></strong></h2>",
+            "createdAt": "2023-08-09T20:06:36.717Z",
+            "updatedAt": "2023-08-15T23:49:38.182Z",
+            "publishedAt": "2023-08-09T20:06:36.715Z",
+            "user_questions": [
+              {
+                "id": 10,
+                "question": "Are you a current or former 92F10?"
+              },
+              {
+                "id": 8,
+                "question": "Did you complete the tutorial?"
+              },
+              {
+                "id": 7,
+                "question": "If you are not a skill level 92F10, the length of time in your present position:"
+              },
+              {
+                "id": 9,
+                "question": "Your military rank"
+              }
+            ]
+          }
+        },
+        "user": {
+          "id": 3,
+          "username": "user2"
+        },
+        "user_answers": [
+          {
+            "id": 17,
+            "answer": "Yes"
+          }
+        ]
+      }
+    ];
+    const header = _.sortBy(_.uniqBy(intData, "user_question.id"), "user_question.order");
+    header.unshift({user_question: {id: 0}, user: {username: 'USERS'}});
+    const usersRow = _.uniqBy(intData, "user.id");
+    let tableRows = [];
+    let headerRow = {};
+
+    for(const [index, userItem] of usersRow.entries()) {
+      let headerCells = [];
+      let dataCells = [];
+      // create header ROW
+      if(index == 0) {
+        for(const h of header) {
+          let cell;
+          if(h.user_question.id == 0) {
+            cell = new TableCell({
+                children: [new Paragraph(h.user.username)],
+            });
+          } else {
+            cell = new TableCell({
+                children: [new Paragraph(h.user_question.question)],
+            });
+            headerCells.push(cell);
+          }
+        }
+        headerRow = new TableRow({
+            children: [
+              headerCells
+            ],
+        });
+      }
+
+      for (let i = 0; i < header.length; i++) {
+          let dataCell;
+          dataCell = new TableCell({
+              children: [],
+          });
+          dataCells.push(dataCell);
+      }
+      
+      dataCells[0] = new TableCell({
+          children: [new Paragraph(userItem.user.username)],
+      });
+
+      let row = new TableRow({
+          children: [
+            dataCells
+          ],
+      });
+      tableRows.push(row);
+    }
+ 
+    tableRows.unshift(headerRow);
+    // const tablet = [];
+    console.log("Table Rows: ", tableRows);
+    // const table = new Table({
+    //   rows:  tableRows
+    // });
+    // console.log("table: ", table);
+    for (const item of intData) {
+
+      // get header index
+      let columnIndex = header.findIndex(h => h.user_question.id === item.user_question.id);
+      // get userRow index
+      // create identical object
+      // let row = new TableRow({
+      //     children: [
+      //         new TableCell({
+      //             children: [new Paragraph(item.user.username)],
+      //         }),
+      //     ],
+      // });
+      // find index of that object
+      let rowIndex = tableRows.findIndex(h => h.options.children[0][0].options.children[0].root[1].root[1].root[1] === item.user.username);
+      // out based on each index position
+      const col = new TableCell({
+          children: [new Paragraph(item.user_answers[0].answer)],
+      });
+      // console.log("Row Index: ", rowIndex);
+      // console.log("Column Children Index: ", columnIndex);
+      tableRows[rowIndex].root[1][columnIndex] = col;
+      console.log('OUT: ', rowIndex);
+      // tablet.push(col);
+      // console.log("Last Table update: ", tableRows);
+    };
+ 
+    const val = Object.keys(tableRows);
+    console.log("Created Table 1", tableRows);
+    const table = new Table({
+      rows:  val
+    });
+  
+
+    // const table2 = new Table({
+    //     rows: [
+    //         new TableRow({
+    //             children: [
+    //                 new TableCell({
+    //                     children: [new Paragraph("Hello")],
+    //                 }),
+    //                 new TableCell({
+    //                     children: [],
+    //                 }),
+    //             ],
+    //         }),
+    //         new TableRow({
+    //             children: [
+    //                 new TableCell({
+    //                     children: [],
+    //                 }),
+    //                 new TableCell({
+    //                     children: [new Paragraph("World")],
+    //                 }),
+    //             ],
+    //         }),
+    //     ],
+    // });
+
+    //console.log("Created Table 2", table2);
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            table,
+          ],
+        },
+      ],
+    });
+
+
+
+    Packer.toBlob(doc, true).then((blob) => {
+        // saveAs from FileSaver will download the file
+        saveAs(blob, "successSheldon.docx");
+    });
+
+
   },
   setup() {
     const store = useStore();
@@ -233,7 +803,7 @@ export default {
     let modules = computed(function () {
       return store.getters.getModules
     });
-
+    
 
     return {
       modules
