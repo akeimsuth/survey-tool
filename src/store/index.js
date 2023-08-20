@@ -192,14 +192,12 @@ export default createStore({
         commit('setIsAuthenticated', isAuthenticated);
         commit('setUser', data);
         if(data){
-          console.log('USER DATA: ', data.data.user);
           await dispatch('getRole');
           await dispatch('fetchAssignedTemplates', data.data.user.id);
         }
         console.log('SUCCESS!!');
         return this.state.role;
       } catch (error) {
-        console.log('FAILED!!!');
         const isAuthenticated = false;
         commit('setIsAuthenticated', isAuthenticated);
         return false;
@@ -209,7 +207,6 @@ export default createStore({
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
         const data = await axios.get(`${process.env.VUE_APP_DEV}/users/${this.state.user.data.user.id}?populate=role`);
-        console.log('DATA ROLE:: ', data.data);
         commit('setRole', data.data.role.type);
       } catch (error) {
         console.log('FAILED!!!');
@@ -220,7 +217,6 @@ export default createStore({
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
         const data = await axios.get(`${process.env.VUE_APP_DEV}/tags`);
         commit('setTags', data.data.data);
-        console.log('TAGS: ', data.data);
       } catch (error) {
         console.log('No Tags Found!!!');
       }
@@ -372,7 +368,6 @@ export default createStore({
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`${process.env.VUE_APP_DEV}/users/${id}?populate=user_template`)
         .then(async(response) => {
-          console.log('TOP: ', response.data);
           commit('setAssignedTemplates',response.data.user_template);
           //if(this.state.role == 'authenticated'){
           await dispatch('checkIfFirstTime', id, response.data.user_template.id);

@@ -302,7 +302,7 @@ export default {
       personsArray.forEach(person => {
         const userBrowser = person.deviceBrowser;
         const userDevice = person.devicePlatform;
-        if (userBrowser.toLowerCase().includes(browserName.toLowerCase()) && userDevice.toLowerCase().includes(deviceName.toLowerCase())) {
+        if (browserName.toLowerCase().includes(userBrowser.toLowerCase()) && userDevice.toLowerCase().includes(deviceName.toLowerCase())) {
           browserCount++;
         }
       });
@@ -569,7 +569,7 @@ export default {
               type: ShadingType.SOLID,
               color: "f2f2f2",
             },
-            columnSpan: 4
+            columnSpan: 5
           }),
         ]
       });
@@ -606,7 +606,7 @@ export default {
               type: ShadingType.SOLID,
               color: "f2f2f2",
             },
-            columnSpan: 2
+            columnSpan: 5
           }),
         ]
       });
@@ -627,7 +627,7 @@ export default {
             columnSpan: 1
           }),
           new TableCell({
-            children: [new Paragraph('IOS')],
+            children: [new Paragraph('iOS')],
             columnSpan: 1
           }),
           new TableCell({
