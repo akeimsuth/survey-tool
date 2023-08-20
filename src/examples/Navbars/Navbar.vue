@@ -55,10 +55,10 @@
               data-toggle="modal" data-target="#exampleModal" v-if="auth">
               Create account
             </button>
-            <i style="cursor: pointer;" class="fas fa-pencil-alt text-dark me-2" v-if="accountId & auth" @click="showUpdateModal"></i>
+            <i style="cursor: pointer;" class="fas fa-pencil-alt text-dark me-2" v-if="accountId.id & auth" @click="showUpdateModal"></i>
             <select @change="selectAccount" id="account" name="account" class="form-control form-select mb-0 me-3 px-5" v-if="auth" v-model="accountId">
               <option value="0">select account</option>
-              <option v-for="account in accounts" :key="account.id" :value="account.id">
+              <option v-for="account in accounts" :key="account.id" :value="account">
                 {{ account.name }}
               </option>
 
@@ -94,7 +94,7 @@ export default {
       isModalOpen: false,
       isUpdateModalOpen: false,
       name: '',
-      accountId: localStorage.getItem('account') || 0,
+      accountId: JSON.parse(localStorage.getItem('account')) || '0',
       fullName: '',
       account_name: ''
     };
@@ -105,7 +105,6 @@ export default {
     let auth = computed(function () {
       return store.state.role == 'auth_admin'
     });
-
 
     return {
       auth
@@ -139,6 +138,7 @@ export default {
         this.isModalOpen = false;
       },
       showUpdateModal() {
+        this.account_name = this.accountId.name;
         this.isUpdateModalOpen = true;
       },
       closeUpdateModal() {
@@ -154,7 +154,7 @@ export default {
       },
     fetchAccounts() {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-        axios.get('https://psb.sitebix.com/api/accounts')
+        axios.get(`${process.env.VUE_APP_DEV}/accounts`)
           .then(response => {
             this.accounts = response.data.data;
           })
@@ -164,7 +164,7 @@ export default {
       },
       updateAccount() {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-        axios.put(`https://psb.sitebix.com/api/accounts/${this.accountId}`, {
+        axios.put(`${process.env.VUE_APP_DEV}/accounts/${this.accountId.id}`, {
           data: {
             name: this.account_name
           }
@@ -178,8 +178,8 @@ export default {
           });
       },
       selectAccount(){
-        localStorage.setItem('account', this.accountId);
-        this.$store.dispatch('assignAccount', {id: this.accountId});
+        localStorage.setItem('account', JSON.stringify(this.accountId));
+        this.$store.dispatch('assignAccount', {id: this.accountId.id});
       }
   },
   components: {

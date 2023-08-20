@@ -1,5 +1,5 @@
 <template>
-  <CreateSurvey />
+    <CreateSurvey />
         <!-- Modal -->
         <div v-if="isModalOpen" class="modal-overlay">
         <div class="modal-content">
@@ -14,15 +14,6 @@
               <div class="mb-3">
                   <input type="text" name="fullname" class="form-control" placeholder="Survey Name" aria-label="fullname" v-model="name" required>
               </div>
-              <!-- <label>Module</label>
-              <div class="mb-3">
-                  <select name="module" class="form-control form-select">
-                    <option>-- SELECT --</option>
-                    <option v-for="mod in modules" :key="mod.id" :value="mod.id">
-                        {{ mod.name }}
-                    </option>
-                  </select>
-              </div> -->
               <label>Description</label>
               <QuillEditor theme="snow" content-type="html" v-model:content="description"/>
               <div class="modal-footer">

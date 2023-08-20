@@ -129,14 +129,14 @@ export default {
     };
     const removeApiAnswer = (id) => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
-      axios.delete(`https://psb.sitebix.com/api/user-answers/${id}`)
+      axios.delete(`${process.env.VUE_APP_DEV}/user-answers/${id}`)
         .then(() => {
           store.dispatch('fetchTemplateQuestions', { id: template.value.id });
         }).catch(error => console.log(error));
     }
     const removeApiQuestion = (id) => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
-      axios.delete(`https://psb.sitebix.com/api/user-questions/${id}`)
+      axios.delete(`${process.env.VUE_APP_DEV}/user-questions/${id}`)
       .then(() => {
         store.dispatch('fetchTemplateQuestions', { id: template.value.id });
       }).catch(error => console.log(error));
@@ -148,7 +148,7 @@ export default {
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
       for (let index = 0; index < questions.value.length; index++) {
         if (questions.value[index].type === 'input' || questions.value[index].answers.length > 0) {
-          const quest = await axios.post('https://psb.sitebix.com/api/user-questions', {
+          const quest = await axios.post(`${process.env.VUE_APP_DEV}/user-questions`, {
             "data": {
               "question": questions.value[index].text,
               "order": index + 1,
@@ -161,7 +161,7 @@ export default {
             //save_questions.push(quest.data.data.id);
             for (let j = 0; j < questions.value[index].answers.length; j++) {
               console.log('QUEST: ', quest.data.data);
-              await axios.post('https://psb.sitebix.com/api/user-answers', {
+              await axios.post(`${process.env.VUE_APP_DEV}/user-answers`, {
                 "data": {
                   "answer": questions.value[index].answers[j].text,
                   "user_question": quest.data.data.id

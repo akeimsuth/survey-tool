@@ -156,6 +156,10 @@
             </tr>
           </tbody>
         </table>
+        <v-pagination
+        :total-visible="5"
+        :total-items="10"
+        />
       </div>
     </div>
   </div>
@@ -287,7 +291,7 @@ export default {
       async submitSurveyForm() {
         // Handle form submission here
         // For demonstration, we'll just log the user input
-        axios.get(`https://psb.sitebix.com/api/surveys/${this.survey_id}?populate[users][fields][0]=id`)
+        axios.get(`${process.env.VUE_APP_DEV}/surveys/${this.survey_id}?populate[users][fields][0]=id`)
         .then((response) => {
           const users_arr = _.map(response.data.data.users, 'id');
           if(!users_arr.includes(this.user_id)){
@@ -302,7 +306,7 @@ export default {
         }).catch(error => console.log(error));
       },
       removeUserFromSurvey(id, user){
-        axios.get(`https://psb.sitebix.com/api/surveys/${id}?populate[users][fields][0]=id`)
+        axios.get(`${process.env.VUE_APP_DEV}/surveys/${id}?populate[users][fields][0]=id`)
         .then((response) => {
           const users_arr = _.filter(response.data.data.users, function(x) { return x.id !== user; })
 
@@ -316,7 +320,7 @@ export default {
         }).catch(error => console.log(error));
       },
       removeUserFromTemplate(id, user){
-        axios.get(`https://psb.sitebix.com/api/user-templates/${id}?populate[users][fields][0]=id`)
+        axios.get(`${process.env.VUE_APP_DEV}/user-templates/${id}?populate[users][fields][0]=id`)
         .then((response) => {
           const users_arr = _.filter(response.data.data.users, function(x) { return x.id !== user; })
 
@@ -335,7 +339,7 @@ export default {
           if(_.find(this.assigned, survey.id)){
             console.log('found');
           } else{
-            axios.get(`https://psb.sitebix.com/api/surveys/${survey.id}?populate[users][fields][0]=id`)
+            axios.get(`${process.env.VUE_APP_DEV}/surveys/${survey.id}?populate[users][fields][0]=id`)
         .then((response) => {
           const users_arr = _.map(response.data.data.users, 'id');
           if(!users_arr.includes(this.user_id)){

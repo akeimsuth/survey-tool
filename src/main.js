@@ -22,10 +22,21 @@ import "./assets/css/nucleo-icons.css";
 import "./assets/css/nucleo-svg.css";
 import SoftUIDashboard from "./soft-ui-dashboard";
 
+// Vuetify
+//import 'vuetify/styles';
+// import { createVuetify } from 'vuetify';
+// import * as components from 'vuetify/lib/components';
+// import * as directives from 'vuetify/lib/directives';
+
+// const vuetify = createVuetify({
+
+//   })
+
 
 const appInstance = createApp(App);
 appInstance.use(store);
 appInstance.use(router);
 appInstance.use(SoftUIDashboard);
+// appInstance.component("v-select", vSelect);
 appInstance.mount("#app");
 

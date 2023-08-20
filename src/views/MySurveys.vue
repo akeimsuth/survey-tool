@@ -27,7 +27,7 @@
               <td>{{ survey?.completed }}</td>
               <td class="align-middle">
                 <div class="col-4">
-                  <button v-if="survey.completed" data-toggle="modal" type="button" disabled
+                  <button v-if="survey?.completed" data-toggle="modal" type="button" disabled
                     class="btn btn-outline-success mb-0 font-weight-bold text-xs mx-4" data-original-title="Edit user">
                     COMPLETED
                   </button>
@@ -68,7 +68,7 @@ export default {
     const store = useStore();
 
     let surveys = computed(function () {
-      return store.getters.getSurveys
+      return store.getters.getAssignedSurveys
     });
     console.log('surveys: ', surveys);
     return {

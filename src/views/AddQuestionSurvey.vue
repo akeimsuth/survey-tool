@@ -36,7 +36,9 @@
           </div>
 
           <div v-for="(question, index) in questions" :key="index" class="question form-group">
-            <div style="display: flex; justify-content: end;" class="input-group-append">
+            <div style="display: flex; justify-content: space-between;" class="input-group-append">
+              <button class="btn btn-outline-info btn-remove-answer btn-sm px-2 mb-0" @click="cloneQuestion(question)">
+                    <i class="fas fa-trash me-2" aria-hidden="true"></i>Clone Question</button>
                   <button class="btn btn-outline-danger btn-remove-answer btn-sm px-2 mb-0" @click="removeQuestion(index)">
                     <i class="fas fa-trash me-2" aria-hidden="true"></i>Remove Question</button>
             </div>
@@ -115,7 +117,9 @@ export default {
     const addAnswer = (question) => {
       question.answers.push({ text: '' });
     };
-
+    const cloneQuestion = (question) => {
+      questions.value.push(question);
+    }
     const removeAnswer = (question, index) => {
       question.answers.splice(index, 1);
     };
@@ -124,14 +128,14 @@ export default {
     };
     const removeApiAnswer = (id) => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
-      axios.delete(`https://psb.sitebix.com/api/answers/${id}`)
+      axios.delete(`${process.env.VUE_APP_DEV}/answers/${id}`)
       .then(() => {
         store.dispatch('fetchQuestions', { id: survey.value.id });
       }).catch(error => console.log(error));
     }
     const removeApiQuestion = (id) => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
-      axios.delete(`https://psb.sitebix.com/api/questions/${id}`)
+      axios.delete(`${process.env.VUE_APP_DEV}/questions/${id}`)
       .then(() => {
         store.dispatch('fetchQuestions', { id: survey.value.id });
       }).catch(error => console.log(error));
@@ -141,7 +145,7 @@ export default {
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
       for (let index = 0; index < questions.value.length; index++){
           if(questions.value[index].type === 'input' || questions.value[index].answers.length > 0){
-            const quest = await axios.put(`https://psb.sitebix.com/api/questions`, {
+            const quest = await axios.put(`${process.env.VUE_APP_DEV}/questions`, {
               "data": {
                 "question": questions.value[index].text,
                 "order": index + 1,
@@ -152,7 +156,7 @@ export default {
             if(quest.data.data.id){
               for (let j = 0; j < questions.value[index].answers.length; j++){
                     console.log('QUEST: ', quest.data.data);
-                    await axios.put('https://psb.sitebix.com/api/answers', {
+                    await axios.put('${process.env.VUE_APP_DEV}/answers', {
                     "data": {
                       "answer": questions.value[index].answers[j].text,
                       "question": quest.data.data.id
@@ -184,7 +188,7 @@ export default {
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
       for (let index = 0; index < questions.value.length; index++){
           if(questions.value[index].type === 'input' || questions.value[index].answers.length > 0){
-            const quest = await axios.post('https://psb.sitebix.com/api/questions', {
+            const quest = await axios.post(`${process.env.VUE_APP_DEV}/questions`, {
               "data": {
                 "question": questions.value[index].text,
                 "order": index + 1,
@@ -195,7 +199,7 @@ export default {
             if(quest.data.data.id){
               for (let j = 0; j < questions.value[index].answers.length; j++){
                     console.log('QUEST: ', quest.data.data);
-                    await axios.post('https://psb.sitebix.com/api/answers', {
+                    await axios.post(`${process.env.VUE_APP_DEV}/answers`, {
                     "data": {
                       "answer": questions.value[index].answers[j].text,
                       "question": quest.data.data.id
@@ -232,6 +236,7 @@ export default {
       removeAnswer,
       removeQuestion,
       removeApiQuestion,
+      cloneQuestion,
       removeApiAnswer,
       submit,
       updateContent,

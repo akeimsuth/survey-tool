@@ -207,7 +207,7 @@ export default {
       }
       for (let index = 0; index < data.length; index++) {
         if (data[index]) {
-          axios.post('https://psb.sitebix.com/api/submissions', {
+          axios.post(`${process.env.VUE_APP_DEV}/submissions`, {
             "data": {
               "question": data[index].question,
               "answers": data[index].answer,
@@ -215,7 +215,7 @@ export default {
               "survey": this.survey.id,
               "devicePlatform": window.navigator.userAgentData.platform,
               "deviceBrowser": detectBrowser(),
-              "feedback": this.feedback
+              "feedback": this.feedback.toString()
             }
           }).then(() => {
             this.checker = true;
@@ -227,14 +227,16 @@ export default {
         }
       }
       toast('Submission Successfull!', {
-        autoClose: 5000,
+        autoClose: 3000,
         type: toast.TYPE.SUCCESS
       })
-      this.$router.push('/my-surveys');
+      setTimeout(() => {
+        this.$router.push('/my-surveys');
+      }, 3000);
     },
     submitReport(){
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.getters.getUser.data.jwt}`;
-      axios.post('https://psb.sitebix.com/api/bugs', {
+      axios.post(`${process.env.VUE_APP_DEV}/bugs`, {
         "data": {
           "page": this.page,
           "description": this.desc,

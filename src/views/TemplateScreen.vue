@@ -128,7 +128,7 @@ export default {
       }
       for (let index = 0; index < data.length; index++) {
         if (data[index]) {
-          axios.post('https://psb.sitebix.com/api/user-submissions', {
+          axios.post('${process.env.VUE_APP_DEV}/user-submissions', {
             "data": {
               "user_question": data[index].question,
               "user_answers": data[index].answer,

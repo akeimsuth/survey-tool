@@ -135,22 +135,23 @@ export default {
         this.$store.dispatch('login', { email: this.email, password: this.password })
         .then((auth) => {
 
+          this.sleep(500).then(() => {
           if (auth === 'auth_admin'){
             this.$router.push('/dashboard');
           //   console.log("USER: ",this.$store.state.user);
            } else if (auth === 'authenticated'){
-             this.sleep(500).then(() => {
               if(this.$store.state.firstTime === true){
                   this.$router.push(`/template-screen/${this.$store.state.assignedTemplates.id}`);
+                  window.location.href=`/template-screen/${this.$store.state.assignedTemplates.id}`;
               } else {
                 this.$router.push('/my-surveys');
               }
+            } else {
+             this.text = 'SIGN IN';
+             this.error = 'Inavlid email or password'
+            }
             })
       
-           } else {
-            this.text = 'SIGN IN';
-            this.error = 'Inavlid email or password'
-           }
         })
         this.text = 'Loading...';
         //this.$router.push('/');

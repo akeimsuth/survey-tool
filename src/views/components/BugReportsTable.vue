@@ -170,7 +170,7 @@ export default {
       return 'btn btn-outline-success mb-0';
     },
     async submitBug() {
-      const quest = await axios.post('https://psb.sitebix.com/api/bug-logs', {
+      const quest = await axios.post('${process.env.VUE_APP_DEV}/bug-logs', {
         "data": {
           "comment": this.comment,
           "status": this.status,
@@ -178,7 +178,7 @@ export default {
         }
       })
       if (quest.data.data.id) {
-        await axios.put(`https://psb.sitebix.com/api/bugs/${this.bug_id}`, {
+        await axios.put(`${process.env.VUE_APP_DEV}/bugs/${this.bug_id}`, {
           "data": {
             "status": this.status,
             "type": this.type,

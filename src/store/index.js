@@ -4,10 +4,8 @@ import axios from "axios";
 import { useStore } from "vuex";
 import moment from "moment";
 import createPersistedState from "vuex-persistedstate";
-
-export default createStore({
-  state: {
-    hideConfigButton: false,
+function initialState () {
+  return {    hideConfigButton: false,
     isPinned: true,
     showConfig: false,
     isTransparent: "",
@@ -19,6 +17,7 @@ export default createStore({
     modules: null,
     assignedSurveys: null,
     assignedTemplates: null,
+    tags: null,
     firstTime: null,
     module: null,
     templates: null,
@@ -45,8 +44,10 @@ export default createStore({
     navbarFixed:
       "position-sticky blur shadow-blur left-auto top-1 z-index-sticky px-0 mx-4",
     absolute: "position-absolute px-4 mx-0 w-100 z-index-2",
-    bootstrap,
-  },
+    bootstrap, }
+}
+export default createStore({
+  state: initialState,
   mutations: {
     toggleConfigurator(state) {
       state.showConfig = !state.showConfig;
@@ -85,11 +86,11 @@ export default createStore({
       state.hideConfigButton = !state.hideConfigButton;
     },
     reset(state){
-        state.hideConfigButton = false,
-        state.isAuthenticated = false,
-        state.accountId = null,
-        state.role = null,
-        state.user = null
+      // acquire initial state
+      const s = initialState()
+      Object.keys(s).forEach(key => {
+        state[key] = s[key]
+      })
     },
     setIsAuthenticated(state, value) {
       state.isAuthenticated = value;
@@ -102,6 +103,9 @@ export default createStore({
     },
     setAccount(state, id) {
       state.accountId = id;
+    },
+    setTags(state, tags) {
+      state.tags = tags;
     },
     setSurveys(state, surveys){
       state.surveys = surveys;
@@ -170,7 +174,7 @@ export default createStore({
     },
     assignAccount({ commit, dispatch }, { id }){
       commit('setAccount', id);
-      dispatch('fetchSurveys', 0);
+      dispatch('fetchSurveys', id || localStorage.getItem('account'));
       dispatch('fetchModules');
       dispatch('fetchTemplates');
       dispatch('getDashboardCount');
@@ -180,7 +184,7 @@ export default createStore({
     },
     async login({ commit, dispatch }, { email, password}){
       try {
-        const data = await axios.post('https://psb.sitebix.com/api/auth/local', {
+        const data = await axios.post(`${process.env.VUE_APP_DEV}/auth/local`, {
             "identifier": email,
             "password": password
         })
@@ -204,17 +208,27 @@ export default createStore({
     async getRole({ commit }){
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-        const data = await axios.get(`https://psb.sitebix.com/api/users/${this.state.user.data.user.id}?populate=role`);
+        const data = await axios.get(`${process.env.VUE_APP_DEV}/users/${this.state.user.data.user.id}?populate=role`);
         console.log('DATA ROLE:: ', data.data);
         commit('setRole', data.data.role.type);
       } catch (error) {
         console.log('FAILED!!!');
       }
     },
+    async fetchTags({ commit }){
+      try {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
+        const data = await axios.get(`${process.env.VUE_APP_DEV}/tags`);
+        commit('setTags', data.data.data);
+        console.log('TAGS: ', data.data);
+      } catch (error) {
+        console.log('No Tags Found!!!');
+      }
+    },
     async getUser({ commit }, { id }){
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-        const data = await axios.post(`https://psb.sitebix.com/api/users/${id}`);
+        const data = await axios.post(`${process.env.VUE_APP_DEV}/users/${id}`);
         commit('setSingleUser', data);
       } catch (error) {
         console.log('FAILED!!!');
@@ -223,10 +237,10 @@ export default createStore({
     async getDashboardCount({ commit }) {
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-        const survey_count = await axios.get(`https://psb.sitebix.com/api/surveys?filters[module][account][id][$eq]=${this.state.accountId}`);
-        const module_count = await axios.get(`https://psb.sitebix.com/api/modules?filters[account][id][$eq]=${this.state.accountId}`);
-        const user_count = await axios.get('https://psb.sitebix.com/api/users/count');
-        const bug_count = await axios.get(`https://psb.sitebix.com/api/bugs?filters[account][id][$eq]=${this.state.accountId}`);
+        const survey_count = await axios.get(`${process.env.VUE_APP_DEV}/surveys?filters[module][account][id][$eq]=${this.state.accountId}`);
+        const module_count = await axios.get(`${process.env.VUE_APP_DEV}/modules?filters[account][id][$eq]=${this.state.accountId}`);
+        const user_count = await axios.get(`${process.env.VUE_APP_DEV}/users/count`);
+        const bug_count = await axios.get(`${process.env.VUE_APP_DEV}/bugs?filters[account][id][$eq]=${this.state.accountId}`);
         commit('setSurveyCount', survey_count.data.meta.pagination.total);
         commit('setModuleCount', module_count.data.meta.pagination.total);
         commit('setBugCount', bug_count.data.meta.pagination.total);
@@ -238,7 +252,7 @@ export default createStore({
     },
     createUser({ dispatch }, { username, email, password}){
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
-      axios.post('https://psb.sitebix.com/api/auth/local/register', {
+      axios.post(`${process.env.VUE_APP_DEV}/auth/local/register`, {
         username: username,
         email: email,
         password: password,
@@ -252,7 +266,7 @@ export default createStore({
     },
     fetchBugs({ commit }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get('https://psb.sitebix.com/api/bugs?populate=*')
+      axios.get(`${process.env.VUE_APP_DEV}/bugs?populate=*`)
         .then(response => {
           commit('setBugs',response.data.data);
         })
@@ -262,7 +276,7 @@ export default createStore({
     },
     fetchUsers({ commit }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get('https://psb.sitebix.com/api/users?populate=role')
+      axios.get(`${process.env.VUE_APP_DEV}/users?populate=role`)
         .then(response => {
           commit('setUsers',response.data);
         })
@@ -272,7 +286,7 @@ export default createStore({
     },
     fetchUser({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/users/${id}`)
+      axios.get(`${process.env.VUE_APP_DEV}/users/${id}`)
         .then(response => {
           commit('setSingleUser',response.data);
         })
@@ -284,7 +298,7 @@ export default createStore({
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       if( id != 0 ){
-        axios.get(`https://psb.sitebix.com/api/surveys?filters[module][id][$eq]=${id}`)
+        axios.get(`${process.env.VUE_APP_DEV}/surveys?filters[module][id][$eq]=${id}`)
           .then(response => {
             commit('setSurveys',response.data.data);
           })
@@ -293,7 +307,7 @@ export default createStore({
           });
       } else {
 
-        axios.get(`https://psb.sitebix.com/api/surveys?filters[module][account][id][$eq]=${this.state.accountId}`)
+        axios.get(`${process.env.VUE_APP_DEV}/surveys?filters[module][account][id][$eq]=${this.state.accountId}`)
           .then(response => {
             commit('setSurveys',response.data.data);
           })
@@ -305,7 +319,7 @@ export default createStore({
     fetchUserSurveys({ commit, dispatch }) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/users/${this.state.user.data.user.id}?populate=surveys`)
+      axios.get(`${process.env.VUE_APP_DEV}/users/${this.state.user.data.user.id}?populate=surveys`)
         .then(response => {
           commit('setSurveys',response.data.surveys);
           dispatch('checkSubmission', response.data.surveys);
@@ -317,7 +331,7 @@ export default createStore({
     fetchAssignedSurveys({ commit }, { id }) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/users/${id}?populate=surveys`)
+      axios.get(`${process.env.VUE_APP_DEV}/users/${id}?populate=surveys`)
         .then(async(response) => {
           commit('setAssignedSurveys',response.data.surveys);
         })
@@ -325,13 +339,13 @@ export default createStore({
           console.error('Error fetching users:', error);
         });
     },
-    async checkSubmission({ commit }, { val }) {
+    async checkSubmission({ commit }, val) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      const arr = this.state.surveys;
+      const arr = val;
       console.log('VAL: ', val);
       for (let index = 0; arr.length > index; index++) {
-        const data = await axios.get(`https://psb.sitebix.com/api/submissions/?filters[user][id][$eq]=${this.state.user.data.user.id}&filters[survey][id][$eq]=${arr[index].id}`)
+        const data = await axios.get(`${process.env.VUE_APP_DEV}/submissions/?filters[user][id][$eq]=${this.state.user.data.user.id}&filters[survey][id][$eq]=${arr[index].id}`)
         console.log('DATE: ', data.data.data);
         if(data.data.data.length > 0){
           arr[index].completed = moment(data.data.data[0].updatedAt).format('MMM DD, YYYY');
@@ -343,7 +357,7 @@ export default createStore({
     checkIfFirstTime({ commit }, id, tempId) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/user-submissions/?filters[user][id][$eq]=${id}&filters[user_template][id][$eq]=${tempId}`)
+      axios.get(`${process.env.VUE_APP_DEV}/user-submissions/?filters[user][id][$eq]=${id}&filters[user_template][id][$eq]=${tempId}`)
         .then(response => {
           console.log('RESP: ', response.data.data.length === 0);
           commit('setFirstTime',response.data.data.length === 0);
@@ -356,7 +370,7 @@ export default createStore({
     fetchAssignedTemplates({ commit, dispatch }, id) {
       console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/users/${id}?populate=user_template`)
+      axios.get(`${process.env.VUE_APP_DEV}/users/${id}?populate=user_template`)
         .then(async(response) => {
           console.log('TOP: ', response.data);
           commit('setAssignedTemplates',response.data.user_template);
@@ -371,7 +385,7 @@ export default createStore({
     },
     fetchQuestions({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/surveys/${id}?populate[questions][populate]=answers`)
+      axios.get(`${process.env.VUE_APP_DEV}/surveys/${id}?populate[questions][populate]=answers`)
         .then(response => {
           commit('setQuestions',response.data.data.questions);
         })
@@ -381,7 +395,7 @@ export default createStore({
     },
     fetchTemplateQuestions({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/user-templates/${id}?populate[user_questions][populate]=user_answers`)
+      axios.get(`${process.env.VUE_APP_DEV}/user-templates/${id}?populate[user_questions][populate]=user_answers`)
         .then(response => {
           commit('setTemplateQuestions',response.data.data.user_questions);
         })
@@ -391,7 +405,7 @@ export default createStore({
     },
     fetchModules({ commit }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/modules?filters[account][id][$eq]=${this.state.accountId}`)
+      axios.get(`${process.env.VUE_APP_DEV}/modules?filters[account][id][$eq]=${this.state.accountId}`)
         .then(response => {
           commit('setModules',response.data.data);
         })
@@ -401,7 +415,7 @@ export default createStore({
     },
     fetchModule({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/modules?filters[id][$eq]=${id}`)
+      axios.get(`${process.env.VUE_APP_DEV}/modules?filters[id][$eq]=${id}`)
         .then(response => {
           commit('setModule',response.data.data[0]);
         })
@@ -411,7 +425,7 @@ export default createStore({
     },
     fetchSurvey({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/surveys/${id}populate[module][populate]=account`)
+      axios.get(`${process.env.VUE_APP_DEV}/surveys/${id}populate[module][populate]=account`)
         .then(response => {
           commit('setSurvey',response.data.data);
         })
@@ -421,7 +435,7 @@ export default createStore({
     },
     updateModule({ dispatch }, { id, name, description }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.put(`https://psb.sitebix.com/api/modules/${id}`, {
+      axios.put(`${process.env.VUE_APP_DEV}/modules/${id}`, {
         "data": {
           "name": name,
           "description": description,
@@ -436,7 +450,7 @@ export default createStore({
     },
     updateUser({ dispatch }, { id, username, email, password }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.put(`https://psb.sitebix.com/api/users/${id}`, {
+      axios.put(`${process.env.VUE_APP_DEV}/users/${id}`, {
         username: username,
         email: email,
         password: password
@@ -450,7 +464,7 @@ export default createStore({
     },
     updateSurvey({ dispatch }, { id, name, description, users }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.put(`https://psb.sitebix.com/api/surveys/${id}`, {
+      axios.put(`${process.env.VUE_APP_DEV}/surveys/${id}`, {
         "data": {
           "name": name,
           "description": description,
@@ -466,7 +480,7 @@ export default createStore({
     },
     updateTemplate({ dispatch }, { id, name, description, users }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.put(`https://psb.sitebix.com/api/user-templates/${id}`, {
+      axios.put(`${process.env.VUE_APP_DEV}/user-templates/${id}`, {
         "data": {
           "name": name,
           "description": description,
@@ -482,7 +496,7 @@ export default createStore({
     },
     fetchTemplates({ commit }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/user-templates?filters[module][account][id][$eq]=${this.state.accountId}`)
+      axios.get(`${process.env.VUE_APP_DEV}/user-templates?filters[module][account][id][$eq]=${this.state.accountId}`)
         .then(response => {
           commit('setTemplates',response.data.data);
         })
@@ -492,7 +506,7 @@ export default createStore({
     },
     fetchTemplate({ commit }, { id }) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.get(`https://psb.sitebix.com/api/user-templates/${id}`)
+      axios.get(`${process.env.VUE_APP_DEV}/user-templates/${id}`)
         .then(response => {
           commit('setTemplate',response.data.data);
         })
@@ -502,7 +516,7 @@ export default createStore({
     },
     createModule({  dispatch }, { name, description}) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.post(`https://psb.sitebix.com/api/modules`, {
+      axios.post(`${process.env.VUE_APP_DEV}/modules`, {
         "data": {
           "name": name,
           "description": description,
@@ -520,7 +534,7 @@ export default createStore({
     },
     createTemplate({  dispatch }, { name, description}) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.post(`https://psb.sitebix.com/api/user-templates`, {
+      axios.post(`${process.env.VUE_APP_DEV}/user-templates`, {
         "data": {
           "name": name,
           "description": description,
@@ -536,7 +550,7 @@ export default createStore({
     },
     createSurvey({  dispatch }, { name, description, module_id}) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
-      axios.post(`https://psb.sitebix.com/api/surveys`, {
+      axios.post(`${process.env.VUE_APP_DEV}/surveys`, {
         "data": {
           "name": name,
           "description": description,
@@ -556,7 +570,7 @@ export default createStore({
       const store = useStore();
  
       axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getUser.data.jwt}`;
-      axios.post('https://psb.sitebix.com/api/questions', {
+      axios.post(`${process.env.VUE_APP_DEV}/questions`, {
         "data": {
           "question": question,
           "order": order,
@@ -587,6 +601,9 @@ export default createStore({
     },
     getBugs(state){
       return state.bugs;
+    },
+    getTags(state){
+      return state.tags;
     },
     getSurveys(state){
       return state.surveys;
