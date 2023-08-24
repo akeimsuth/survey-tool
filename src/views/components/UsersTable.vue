@@ -30,7 +30,7 @@
         <label>Password</label>
         <div class="mb-3" style="display:flex;align-items: baseline;">
           <input :type="type" id="user_password" name="password" class="form-control" placeholder="Password"
-            aria-label="password" v-model="password" required>
+            aria-label="password" v-model="password">
           <i v-if="type === 'text'" id="icon" class="fas fa-eye mx-4" @click="showPassword"></i>
           <i v-else id="icon" class="fas fa-eye-slash mx-4" @click="showPassword"></i>
           <button style="margin-left: 1rem" class="btn btn-primary" type="button" id="generate_password"
@@ -281,7 +281,11 @@ export default {
       submitForm() {
         // Handle form submission here
         // For demonstration, we'll just log the user input
-        this.$store.dispatch('updateUser', { id: this.id, username: this.username, email: this.email, password: this.password})
+        if(this.password){
+          this.$store.dispatch('updateUser', { id: this.user_id, username: this.username, email: this.email, password: this.password})
+        } else {
+          this.$store.dispatch('updateUser', { id: this.user_id, username: this.username, email: this.email})
+        }
         toast("User Info Updated!", {
                 autoClose: 3000,
                 type: toast.TYPE.SUCCESS

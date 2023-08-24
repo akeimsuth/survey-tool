@@ -47,7 +47,7 @@
               <td class='text-center'>{{ temp.name }}</td>
               <td class="align-middle">
                 <div class="col-4">
-                  <a style="cursor: pointer;" @click="showModal(temp.id)" data-toggle="modal"
+                  <a style="cursor: pointer;" @click="showModal(temp.id, temp.name, temp.description)" data-toggle="modal"
                     class="btn btn-sm btn-outline-primary mb-0 text-secondary font-weight-bold text-xs mx-4"
                     data-original-title="Edit user">
                     <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
@@ -115,11 +115,10 @@ export default {
 
   },
   methods: {
-    showModal(id) {
-      this.$store.dispatch('fetchTemplate', { id: id});
-      this.id = this.template?.id;
-      this.name = this.template?.name;
-      this.description = this.template?.description;
+    showModal(id, name, desc) {
+      this.id = id;
+      this.name = name;
+      this.description = desc;
       this.isModalOpen = true;
       },
       closeModal() {
