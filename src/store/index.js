@@ -247,7 +247,7 @@ export default createStore({
       }
     },
     createUser({ dispatch }, { username, email, password}){
-      axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.post(`${process.env.VUE_APP_DEV}/auth/local/register`, {
         username: username,
         email: email,

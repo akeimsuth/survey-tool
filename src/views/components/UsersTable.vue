@@ -156,10 +156,6 @@
             </tr>
           </tbody>
         </table>
-        <v-pagination
-        :total-visible="5"
-        :total-items="10"
-        />
       </div>
     </div>
   </div>
@@ -240,7 +236,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('fetchSurveys', null);
+    this.$store.dispatch('fetchSurveys', 0);
   },
   methods: {
     showModal(id, username, email) {

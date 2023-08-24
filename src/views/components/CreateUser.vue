@@ -49,6 +49,8 @@
   </template>
   
   <script>
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
   export default {
     data() {
       return {
@@ -69,6 +71,11 @@
       submitForm() {
         // Handle form submission here
         this.$store.dispatch('createUser', { username: this.username, email: this.email, password: this.password});
+        toast("User Created Successfully!", {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
+        });
+        this.closeModal();
       },
       showPassword(){
         // Create a reactive variable to hold the selected input type
