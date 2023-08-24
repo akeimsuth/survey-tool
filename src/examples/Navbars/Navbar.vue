@@ -146,10 +146,19 @@ export default {
       },
       submitForm() {
         // Handle form submission here
-        // For demonstration, we'll just log the user input
-        console.log({
-          name: this.name,
-        });
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
+        axios.post(`${process.env.VUE_APP_DEV}/accounts`, {
+          "data": {
+            "name": this.fullName
+          }
+        })
+          .then(() => {
+            this.fetchAccounts();
+          })
+          .catch(error => {
+            console.error('Error fetching accounts:', error);
+          });
+      
         this.closeModal();
       },
     fetchAccounts() {
