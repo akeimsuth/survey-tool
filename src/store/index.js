@@ -195,7 +195,6 @@ export default createStore({
           await dispatch('getRole');
           await dispatch('fetchAssignedTemplates', data.data.user.id);
         }
-        console.log('SUCCESS!!');
         return this.state.role;
       } catch (error) {
         const isAuthenticated = false;
@@ -209,7 +208,7 @@ export default createStore({
         const data = await axios.get(`${process.env.VUE_APP_DEV}/users/${this.state.user.data.user.id}?populate=role`);
         commit('setRole', data.data.role.type);
       } catch (error) {
-        console.log('FAILED!!!');
+        console.log('FAILED!!!: ', error);
       }
     },
     async fetchTags({ commit }){
@@ -227,7 +226,7 @@ export default createStore({
         const data = await axios.post(`${process.env.VUE_APP_DEV}/users/${id}`);
         commit('setSingleUser', data);
       } catch (error) {
-        console.log('FAILED!!!');
+        console.log('FAILED!!!: ', error);
       }
     },
     async getDashboardCount({ commit }) {
@@ -241,7 +240,6 @@ export default createStore({
         commit('setModuleCount', module_count.data.meta.pagination.total);
         commit('setBugCount', bug_count.data.meta.pagination.total);
         commit('setUserCount', user_count.data);
-        console.log('Count: ', user_count);
       } catch (error) {
         console.log('FAILED!!!: ', error);
       }
@@ -291,7 +289,6 @@ export default createStore({
         });
     },
     fetchSurveys({ commit }, id) {
-      console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       if( id != 0 ){
         axios.get(`${process.env.VUE_APP_DEV}/surveys?filters[module][id][$eq]=${id}`)
@@ -313,7 +310,6 @@ export default createStore({
       }
     },
     fetchUserSurveys({ commit, dispatch }) {
-      console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`${process.env.VUE_APP_DEV}/users/${this.state.user.data.user.id}?populate=surveys`)
         .then(response => {
@@ -325,7 +321,6 @@ export default createStore({
         });
     },
     fetchAssignedSurveys({ commit }, { id }) {
-      console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`${process.env.VUE_APP_DEV}/users/${id}?populate=surveys`)
         .then(async(response) => {
@@ -336,13 +331,10 @@ export default createStore({
         });
     },
     async checkSubmission({ commit }, val) {
-      console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       const arr = val;
-      console.log('VAL: ', val);
       for (let index = 0; arr.length > index; index++) {
         const data = await axios.get(`${process.env.VUE_APP_DEV}/submissions/?filters[user][id][$eq]=${this.state.user.data.user.id}&filters[survey][id][$eq]=${arr[index].id}`)
-        console.log('DATE: ', data.data.data);
         if(data.data.data.length > 0){
           arr[index].completed = moment(data.data.data[0].updatedAt).format('MMM DD, YYYY');
         }
@@ -351,11 +343,9 @@ export default createStore({
       
     },
     checkIfFirstTime({ commit }, id, tempId) {
-      console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`${process.env.VUE_APP_DEV}/user-submissions/?filters[user][id][$eq]=${id}&filters[user_template][id][$eq]=${tempId}`)
         .then(response => {
-          console.log('RESP: ', response.data.data.length === 0);
           commit('setFirstTime',response.data.data.length === 0);
           
         })
@@ -364,7 +354,6 @@ export default createStore({
         });
     },
     fetchAssignedTemplates({ commit, dispatch }, id) {
-      console.log('TOKEN: ',this.state.user.data.jwt)
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.state.user.data.jwt}`;
       axios.get(`${process.env.VUE_APP_DEV}/users/${id}?populate=user_template`)
         .then(async(response) => {
@@ -519,8 +508,7 @@ export default createStore({
           "surveys": []
         }
       })
-        .then(response => {
-          console.log(response);
+        .then(() => {
           dispatch('fetchModules');
         })
         .catch(error => {
@@ -535,8 +523,7 @@ export default createStore({
           "description": description,
         }
       })
-        .then(response => {
-          console.log(response);
+        .then(() => {
           dispatch('fetchTemplates');
         })
         .catch(error => {
@@ -553,8 +540,7 @@ export default createStore({
           "account": this.state.accountId
         }
       })
-        .then(response => {
-          console.log(response);
+        .then(() => {
           dispatch('fetchSurveys', 0);
         })
         .catch(error => {
@@ -575,7 +561,6 @@ export default createStore({
         }
       })
         .then(response => {
-          console.log(response);
           commit('setQuestions', response.data)
         })
         .catch(error => {

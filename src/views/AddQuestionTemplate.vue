@@ -160,7 +160,6 @@ export default {
           if (quest.data.data.id) {
             //save_questions.push(quest.data.data.id);
             for (let j = 0; j < questions.value[index].answers.length; j++) {
-              console.log('QUEST: ', quest.data.data);
               await axios.post(`${process.env.VUE_APP_DEV}/user-answers`, {
                 "data": {
                   "answer": questions.value[index].answers[j].text,
@@ -184,7 +183,6 @@ export default {
         });
       }
 
-      console.log('Submitted Questions and Answers:', questions.value);
 
     };
 

@@ -115,10 +115,7 @@ export default {
         // For demonstration, we'll just log the user input
 
       this.$store.dispatch('updateModule', { id: this.id, name: this.name, description: this.description})
-        console.log({
-          name: this.name,
-          description: this.description,
-        });
+
         toast("Module Info Updated!", {
                 autoClose: 3000,
                 type: toast.TYPE.SUCCESS

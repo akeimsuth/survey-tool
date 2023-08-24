@@ -249,14 +249,12 @@ export default {
         this.user_id = id;
         this.$store.dispatch('fetchAssignedSurveys', { id: id});
         //this.$store.dispatch('fetchAssignedSurveys', { id: id});
-        console.log("ASSIGNED: ",this.assigned);
         this.issModalOpen = true;
       },
       showTemplateModal(id) {
         this.user_id = id;
         this.$store.dispatch('fetchAssignedTemplates', { id: id});
         //this.$store.dispatch('fetchAssignedSurveys', { id: id});
-        console.log("ASSIGNED: ",this.assignedTemp);
         this.isTemplateModalOpen = true;
       },
       closeModal() {
@@ -334,7 +332,6 @@ export default {
         }).catch(error => console.log(error));
       },
       addAllSurveys(){
-        console.log('SUR: ', this.surveys);
         this.surveys.map((survey) => {
           if(_.find(this.assigned, survey.id)){
             console.log('found');

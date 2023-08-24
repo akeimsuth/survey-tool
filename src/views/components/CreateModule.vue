@@ -33,8 +33,10 @@
   </template>
   
   <script>
-    import { QuillEditor } from '@vueup/vue-quill'
+import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
     export default {
     components: {
     QuillEditor
@@ -62,9 +64,10 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
         // For demonstration, we'll just log the user input
 
       this.$store.dispatch('createModule', { name: this.name, description: this.description})
-        console.log({
-          name: this.name,
-          description: this.description,
+
+      toast("Module Created Successfully!", {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
         });
         this.closeModal();
       },

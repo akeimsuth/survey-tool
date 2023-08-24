@@ -151,10 +151,6 @@ export default {
         // For demonstration, we'll just log the user input
 
         this.$store.dispatch('updateSurvey', { id: this.id, name: this.name, description: this.description})
-        console.log({
-          name: this.name,
-          description: this.description,
-        });
         toast("Survey Info Updated!", {
                 autoClose: 3000,
                 type: toast.TYPE.SUCCESS

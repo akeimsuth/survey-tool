@@ -108,7 +108,6 @@ export default {
     });
     
     
-    console.log('Questions: ', id);
     
     const addQuestion = () => {
       questions.value.push({ type: 'none', text: '', answers: [] });
@@ -155,7 +154,6 @@ export default {
             })
             if(quest.data.data.id){
               for (let j = 0; j < questions.value[index].answers.length; j++){
-                    console.log('QUEST: ', quest.data.data);
                     await axios.put('${process.env.VUE_APP_DEV}/answers', {
                     "data": {
                       "answer": questions.value[index].answers[j].text,
@@ -174,7 +172,6 @@ export default {
           }
       }
 
-      console.log('Submitted Questions and Answers:', questions.value);
       if(checker){
         toast("Questions and Answers Submitted!", {
           autoClose: 3000,
@@ -198,7 +195,6 @@ export default {
             })
             if(quest.data.data.id){
               for (let j = 0; j < questions.value[index].answers.length; j++){
-                    console.log('QUEST: ', quest.data.data);
                     await axios.post(`${process.env.VUE_APP_DEV}/answers`, {
                     "data": {
                       "answer": questions.value[index].answers[j].text,
@@ -217,7 +213,6 @@ export default {
           }
       }
 
-      console.log('Submitted Questions and Answers:', questions.value);
       if(checker){
         toast("Questions and Answers Submitted!", {
           autoClose: 3000,

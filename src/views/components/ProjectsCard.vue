@@ -330,7 +330,7 @@ export default {
       const data = await axios.get(`${process.env.VUE_APP_DEV}/submissions?populate[survey][populate][module]=id&populate=user`);
       //const data = await axios.get(`${process.env.VUE_APP_DEV}/submissions?filters[survey][module][id][$eq]=${this.module_id.id}&populate[survey][populate][module]=id&populate=user`);
       const arr = _.uniqBy(data.data.data, 'user.id');
-      console.log('ARR: ', arr);
+
 
 
       const title = new Paragraph({
@@ -443,7 +443,7 @@ export default {
 
       const header = _.sortBy(_.uniqBy(this.user_submissions.data.data, "user_question.id"), "user_question.order");
       header.unshift({ user_question: { id: 0 }, user: { username: 'USERS' } });
-      console.log("header length: ", header.length);
+
       const usersRow = _.uniqBy(this.user_submissions.data.data, "user.id");
       let tableRows = [];
       let headerRow = {};
@@ -488,7 +488,7 @@ export default {
                 answers.push(new Paragraph(textValue))
               }
             });
-            console.log("TheReturn: ", answers);
+
             dataCells[i] = new TableCell({
               children: answers,
             });
@@ -532,7 +532,7 @@ export default {
     async generatePlatform() {
       //const summary = await axios.get(`${process.env.VUE_APP_DEV}/submissions?filters[survey][module][id][$eq]=${this.module_id.id}&populate[question][populate][survey][fields][1]=name&populate[question][fields][0]=question&populate[answers][fields][0]=answer&populate[user][fields][1]=username&populate[question][populate]=answers`);
       const qRow = _.uniqBy(this.submissions.data.data, "user.id");
-      console.log('USER: ', qRow);
+
       let tableRows = [];
       let dataCells = [];
       const devices = ['Windows', 'Mac', 'iOS', 'Android'];
@@ -728,7 +728,6 @@ export default {
         alignment: AlignmentType.CENTER
       });
 
-      console.log('TABLE: ', tableRows);
       const table = new Table({
         rows: tableRows,
         width: {
@@ -749,7 +748,7 @@ export default {
         ],
       });
 
-      console.log(doc);
+
 
       Packer.toBlob(doc, true).then((blob) => {
         // saveAs from FileSaver will download the file
@@ -857,7 +856,7 @@ export default {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
       const data = await axios.get(`${process.env.VUE_APP_DEV}/bugs?populate[survey][fields][0]=id&populate[survey][fields][1]=name&populate[bug_logs]=*`);
       const arr = data.data.data;
-      console.log('ARR: ', arr);
+
 
 
       const title = new Paragraph({
@@ -1006,7 +1005,7 @@ export default {
       const submission = await axios.get(`${process.env.VUE_APP_DEV}/submissions?filters[tag][id][$eq]=${this.tag_id.id}&populate[question][populate][survey][fields][1]=name&populate[question][fields][0]=question&populate[answers][fields][0]=answer&populate[user][fields][1]=username&populate[question][populate]=answers`);
       const qRow = _.sortBy(_.uniqBy(submission.data.data, "question.id"), "question.order");
       const tRow = _.uniqBy(submission.data.data, "question.survey.id");
-      console.log('TROW: ', tRow);
+
       let tableRows = [];
 
       // User - Questions - Answers
@@ -1071,11 +1070,10 @@ export default {
             });
             thirdCells.push(dataCell);
           }
-          console.log('ARR: ', thirdCells);
           for (const [i, option] of questionOptions.entries()) {
             let paragraphs = [];
             //let somethingElse = [];
-            console.log(i);
+
             let counts = 0;
 
             //let num = [];
@@ -1089,7 +1087,7 @@ export default {
             })
 
             let totalQuestions = submission.data.data.reduce((n, a) => (a.question.id == questionItem.question.id ? n + 1 : n), 0)
-            console.log('Count: ', totalQuestions);
+
             let percent = counts == 0 ? 0 : (Number(counts) / Number(totalQuestions)) * 100;
             paragraphs.unshift(new Paragraph(`${percent}%`));
             thirdCells[i] = new TableCell({
@@ -1100,7 +1098,7 @@ export default {
             children: thirdCells
           })
           tableRows.push(third);
-          console.log("THird: ", thirdCells);
+
         }
       }
 
@@ -1138,7 +1136,7 @@ export default {
         ],
       });
 
-      console.log(doc);
+
 
       Packer.toBlob(doc, true).then((blob) => {
         // saveAs from FileSaver will download the file
@@ -1153,7 +1151,7 @@ export default {
       const uRow = _.uniqBy(this.submissions.data.data, "user.id");
       const feedbackRow = _.uniqBy(this.submissions.data.data, "feedback");
       const tRow = _.uniqBy(this.submissions.data.data, "question.survey.id");
-      console.log('FEED: ', feedbackRow);
+
       let tableRows = [];
 
       if (!this.module_id.name) {
@@ -1176,7 +1174,7 @@ export default {
         for (const userItem of qRow) {
           let dataCells = [];
           // create header ROW
-          console.log("ITEM: ", userItem);
+
           let questionRow = new TableRow({
             children: [
               new TableCell({
@@ -1236,7 +1234,7 @@ export default {
           },
         ],
       });
-      console.log(doc);
+
 
 
       Packer.toBlob(doc, true).then((blob) => {
@@ -1249,7 +1247,7 @@ export default {
       const summary = await axios.get(`${process.env.VUE_APP_DEV}/submissions?filters[survey][module][id][$eq]=${this.module_id.id}&populate[question][populate][survey][fields][1]=name&populate[question][fields][0]=question&populate[answers][fields][0]=answer&populate[user][fields][1]=username&populate[question][populate]=answers`);
       const qRow = _.sortBy(_.uniqBy(summary.data.data, "question.id"), "question.order");
       const tRow = _.uniqBy(summary.data.data, "question.survey.id");
-      console.log(qRow);
+
       let tableRows = [];
       if (summary.data.data.length < 1) {
         this.reportEmptyModal = true;
@@ -1310,11 +1308,11 @@ export default {
             });
             thirdCells.push(dataCell);
           }
-          console.log('ARR: ', thirdCells);
+
           for (const [i, option] of questionOptions.entries()) {
             let paragraphs = [];
             //let somethingElse = [];
-            console.log(i);
+
             let counts = 0;
 
             //let num = [];
@@ -1328,7 +1326,7 @@ export default {
             })
 
             let totalQuestions = summary.data.data.reduce((n, a) => (a.question.id == questionItem.question.id ? n + 1 : n), 0)
-            console.log('Count: ', totalQuestions);
+
             let percent = counts == 0 ? 0 : (Number(counts) / Number(totalQuestions)) * 100;
             paragraphs.unshift(new Paragraph(`${percent}%`));
             thirdCells[i] = new TableCell({
@@ -1339,7 +1337,7 @@ export default {
             children: thirdCells
           })
           tableRows.push(third);
-          console.log("THird: ", thirdCells);
+
         }
       }
 
@@ -1371,7 +1369,7 @@ export default {
         ],
       });
 
-      console.log(doc);
+
 
       Packer.toBlob(doc, true).then((blob) => {
         // saveAs from FileSaver will download the file

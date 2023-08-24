@@ -120,7 +120,6 @@ export default {
       this.isModalOpen = true;
     },
     showTagModal() {
-      console.log('tag Modal');
       this.isTagModalOpen = true;
     },
     closeModal() {
@@ -129,31 +128,7 @@ export default {
     closeTagModal() {
       this.isTagModalOpen = false;
     },
-    notify() {
-      const id = toast.loading(
-        'Please wait...',
-        {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        },
-      );
-
-      setTimeout(() => {
-        toast.update(id, {
-          render: <div>This is a test</div>,
-          autoClose: true,
-          closeOnClick: true,
-          closeButton: true,
-          type: 'success',
-          isLoading: false,
-        });
-        setTimeout(() => {
-          // done
-          toast.done(id);
-        }, 1000);
-      }, 2000);
-    },
     submitTagForm() {
-      console.log('Modal Opened');
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;
       axios.post(`${process.env.VUE_APP_DEV}/tags`, {
         "data": {
@@ -175,12 +150,11 @@ export default {
       // Handle form submission here
       // For demonstration, we'll just log the user input
       this.$store.dispatch('createSurvey', { name: this.name, description: this.description, module_id: this.mod, tag_id: this.tag })
-      console.log({
-        name: this.name,
-        modules: this.modules,
-        description: this.description,
-      });
-      this.closeModal();
+      toast("Survey Created Successfully!", {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
+        });
+        this.closeModal();
     },
     fetchModules() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.user.data.jwt}`;

@@ -135,10 +135,7 @@ export default {
         // For demonstration, we'll just log the user input
 
         this.$store.dispatch('updateTemplate', { id: this.id, name: this.name, description: this.description})
-        console.log({
-          name: this.name,
-          description: this.description,
-        });
+
         this.closeModal();
         toast('Template updated successfully!',
         {

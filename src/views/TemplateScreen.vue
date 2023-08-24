@@ -53,7 +53,7 @@ export default {
     const store = useStore();
     const route = useRoute();
     const id = route.params.id;
-    console.log("Survey id", id);
+
     store.dispatch('fetchTemplateQuestions', { id: id });
     store.dispatch('fetchTemplate', { id: id });
 
@@ -63,7 +63,7 @@ export default {
     let template = computed(function () {
       return store.getters.getTemplate
     });
-    console.log('Questions: ', questions);
+
     return {
       questions,
       template
@@ -78,7 +78,7 @@ export default {
   methods: {
     addItem(obj) {
       var match = _.find(this.selectedAnswers, {'question': obj.question});
-      console.log('match: ', match);
+
       if(match){
           var index = _.indexOf(this.selectedAnswers, _.find(this.selectedAnswers, {'question': obj.question}));
           this.selectedAnswers.splice(index, 1, obj);
@@ -103,9 +103,9 @@ export default {
           return v.question == item.question;
         });
         if (existing.length) {
-          console.log('Existing: ', existing);
+
           var existingIndex = output.indexOf(existing[0]);
-          console.log('Existing Index: ', existingIndex);
+
           output[existingIndex].answer = output[existingIndex].answer.toString().concat(',',item.answer.toString()).split(",");
         } else {
           if (typeof item.answer == 'string') {
@@ -114,7 +114,7 @@ export default {
           output.push(item);
         }
       });
-      console.log("Ready for API ", output);
+
       const data = JSON.parse(JSON.stringify(output));
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.getters.getUser.data.jwt}`;

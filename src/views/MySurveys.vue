@@ -70,7 +70,7 @@ export default {
     let surveys = computed(function () {
       return store.getters.getAssignedSurveys
     });
-    console.log('surveys: ', surveys);
+
     return {
       surveys
     }

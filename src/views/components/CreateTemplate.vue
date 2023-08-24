@@ -35,6 +35,8 @@
 <script>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 export default {
   components: {
   QuillEditor
@@ -60,10 +62,11 @@ export default {
       // Handle form submission here
       // For demonstration, we'll just log the user input
       this.$store.dispatch('createTemplate', { name: this.name, description: this.description})
-      console.log({
-        name: this.name,
-        description: this.description,
-      });
+      toast('Template Created successfully!',
+        {
+          autoClose: 5000,
+          type: toast.TYPE.SUCCESS,
+        })
       this.closeModal();
     },
   },
