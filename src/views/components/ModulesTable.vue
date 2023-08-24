@@ -66,7 +66,8 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import CreateModule from './CreateModule.vue';
 import {computed} from 'vue';
 import {useStore} from "vuex";
-
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 export default {
   name: "modules-table",
   components: {
@@ -117,6 +118,10 @@ export default {
         console.log({
           name: this.name,
           description: this.description,
+        });
+        toast("Module Info Updated!", {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
         });
         this.closeModal();
       },

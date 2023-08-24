@@ -84,6 +84,8 @@
 import CreateSurvey from './CreateSurvey.vue';
 import {computed} from 'vue';
 import {useStore} from "vuex";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 export default {
@@ -152,6 +154,10 @@ export default {
         console.log({
           name: this.name,
           description: this.description,
+        });
+        toast("Survey Info Updated!", {
+                autoClose: 3000,
+                type: toast.TYPE.SUCCESS
         });
         this.closeModal();
       },
