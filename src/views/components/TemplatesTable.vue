@@ -112,7 +112,7 @@ export default {
     }
   },
   mounted() {
-
+    this.$store.dispatch('fetchTemplates');
   },
   methods: {
     showModal(id, name, desc) {

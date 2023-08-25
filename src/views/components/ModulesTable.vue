@@ -95,7 +95,7 @@ export default {
     }
   },
   mounted() {
-
+    this.$store.dispatch('fetchModules');
   },
   methods: {
     showModal(id, name, desc) {

@@ -125,6 +125,7 @@ export default {
     }
   },
   mounted(){
+    this.$store.dispatch('fetchSurveys', 0);
     this.$store.dispatch('assignSurveys', this.module_id);
   },
   methods: {

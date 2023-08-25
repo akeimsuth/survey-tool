@@ -55,7 +55,7 @@
               data-toggle="modal" data-target="#exampleModal" v-if="auth">
               Create account
             </button>
-            <i style="cursor: pointer;" class="fas fa-pencil-alt text-dark me-2" v-if="accountId.id & auth" @click="showUpdateModal"></i>
+            <i style="cursor: pointer;" class="fas fa-pencil-alt text-dark me-2" v-if="accountId.id && auth == 'auth_admin'" @click="showUpdateModal"></i>
             <select @change="selectAccount" id="account" name="account" class="form-control form-select mb-0 me-3 px-5" v-if="auth" v-model="accountId">
               <option value="0">select account</option>
               <option v-for="account in accounts" :key="account.id" :value="account">
@@ -103,7 +103,7 @@ export default {
     const store = useStore();
 
     let auth = computed(function () {
-      return store.state.role == 'auth_admin'
+      return store.state.role;
     });
 
     return {

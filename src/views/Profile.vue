@@ -142,7 +142,7 @@
                   </div>
                 </div>
               </div>
-              <button class="btn mb-0 bg-gradient-dark btn-sm null null float-end mt-2 mb-0">Update Info</button>
+              <button @click="submitForm" class="btn mb-0 bg-gradient-dark btn-sm null null float-end mt-2 mb-0">Update Info</button>
             </div>
           </div>
         </div>
@@ -204,6 +204,7 @@ export default {
       faInstagram,
       username: this.$store.state.user?.data?.user?.username,
       email: this.$store.state.user?.data?.user?.email,
+      id: this.$store.state.user?.data?.user?.id,
       newPassword: null,
       oldPassword: null
     };
@@ -229,6 +230,7 @@ export default {
     this.$store.state.isAbsolute = true;
     setNavPills();
     setTooltip(this.$store.state.bootstrap);
+    this.$store.dispatch('fetchUser', this.$store.state.user?.data?.user?.id)
   },
   beforeUnmount() {
     this.$store.state.isAbsolute = false;
@@ -236,10 +238,10 @@ export default {
   methods: {
     submitForm() {
         // Handle form submission here
-        // For demonstration, we'll just log the user input
         if(this.oldPassword && this.newPassword){
             if(this.oldPassword === this.newPassword){
               this.$store.dispatch('updateUser', { id: this.id, username: this.username, email: this.email, password: this.newPassword})
+              this.$store.dispatch('fetchUser', this.id)
               toast("User Info Updated!", {
                       autoClose: 3000,
                       type: toast.TYPE.SUCCESS
@@ -247,12 +249,12 @@ export default {
             }
         } else {
           this.$store.dispatch('updateUser', { id: this.id, username: this.username, email: this.email})
+          this.$store.dispatch('fetchUser', this.id)
           toast("User Info Updated!", {
                   autoClose: 3000,
                   type: toast.TYPE.SUCCESS
           });
         }
-        this.closeModal();
       },
   }
 };
