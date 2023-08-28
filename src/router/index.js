@@ -13,7 +13,8 @@ import TemplateScreen from "@/views/TemplateScreen.vue";
 import SurveyScreen from "@/views/SurveyScreen.vue";
 import AddQuestionSurvey from "@/views/AddQuestionSurvey.vue";
 import AddQuestionTemplate from "@/views/AddQuestionTemplate.vue";
-import NotFound from "@/views/NotFound.vue";
+//import NotFound from "@/views/NotFound.vue";
+import ForgotPassword from "@/views/ForgotPassword.vue";
 
 const routes = [
   {
@@ -96,9 +97,14 @@ const routes = [
     component: AddQuestionTemplate,
   },
   {
+    path: "/forgot-password",
+    name: "Forgot Password",
+    component: ForgotPassword,
+  },
+  {
     path: '/:catchAll(.*)',
-    name: 'NotFound',
-    component: NotFound,
+    name: 'Dashboard',
+    component: Dashboard,
   }
 ];
 
